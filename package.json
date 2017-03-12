@@ -1,7 +1,7 @@
 {
   "name": "full-auth-middleware",
   "author": "Bryan Haakman",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Full authentication middleware for express",
   "main": "lib/index.js",
   "dependencies": {
@@ -40,7 +40,7 @@
     "passport.socketio": "~3.6.1",
     "react": "~15.0.0",
     "react-dom": "~15.0.1",
-    "react-router": "~2.4.0",
+    "react-router": "~2.4.0"
   },
   "devDependencies": {
     "babel-core": "^6.4.5",
