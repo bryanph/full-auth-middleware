@@ -1,9 +1,13 @@
 {
   "name": "full-auth-middleware",
   "author": "Bryan Haakman",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Full authentication middleware for express",
   "main": "lib/index.js",
+  "repository" : {
+      "type" : "git",
+      "url" : "https://github.com/bryanph/full-auth-middleware"
+  },
   "dependencies": {
     "async": "~1.5.2",
     "babel-core": "^6.7.4",
