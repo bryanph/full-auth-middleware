@@ -4,9 +4,9 @@
   "version": "0.0.5",
   "description": "Full authentication middleware for express",
   "main": "lib/index.js",
-  "repository" : {
-      "type" : "git",
-      "url" : "https://github.com/bryanph/full-auth-middleware"
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bryanph/full-auth-middleware"
   },
   "dependencies": {
     "async": "~1.5.2",
@@ -27,6 +27,7 @@
     "foundation-sites": "^6.2.0",
     "install": "^0.6.2",
     "isomorphic-fetch": "^2.2.1",
+    "jade": "^1.11.0",
     "lodash": "^4.6.1",
     "mongodb": "^2.1.11",
     "mongoose": "^4.6.0",
@@ -34,6 +35,7 @@
     "npm": "^3.10.2",
     "numeral": "~1.5.3",
     "passport": "~0.3.2",
+    "passport-facebook": "^2.1.1",
     "passport-github2": "^0.1.10",
     "passport-google-oauth": "^1.0.0",
     "passport-google-oauth2": "^0.1.6",
