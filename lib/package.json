@@ -20,7 +20,10 @@
     "csurf": "1.x.x",
     "emailjs": "1.x.x",
     "express": "4.13.x",
+    "express-handlebars": "^3.0.0",
     "express-session": "1.x.x",
+    "flux-constant": "^1.1.4",
+    "handlebars": "^4.0.7",
     "helmet": "2.x.x",
     "jade": "1.x.x",
     "method-override": "2.x.x",
@@ -33,8 +36,11 @@
     "passport-oauth": "1.x.x",
     "passport-tumblr": "0.1.x",
     "passport-twitter": "1.x.x",
+    "prop-types": "^15.5.8",
+    "react-router-dom": "^4.1.1",
     "serve-static": "1.10.x",
-    "underscore": "1.x.x"
+    "underscore": "1.x.x",
+    "xhr": "^2.4.0"
   },
   "devDependencies": {
     "backbone": "1.x.x",
@@ -55,6 +61,7 @@
     "jquery": "2.x.x",
     "jquery.cookie": "1.x.x",
     "moment": "2.13.x",
-    "respond.js": "1.x.x"
+    "respond.js": "1.x.x",
+    "webpack": "2.4.x"
   }
 }
