@@ -24,6 +24,7 @@
     "express-session": "1.x.x",
     "flux-constant": "^1.1.4",
     "handlebars": "^4.0.7",
+    "handlebars-layouts": "^3.1.4",
     "helmet": "2.x.x",
     "jade": "1.x.x",
     "method-override": "2.x.x",
@@ -45,6 +46,7 @@
   "devDependencies": {
     "backbone": "1.x.x",
     "bootstrap": "3.x.x",
+    "css-loader": "^0.28.0",
     "font-awesome": "4.x.x",
     "grunt": "1.x.x",
     "grunt-cli": "1.x.x",
@@ -60,8 +62,11 @@
     "html5shiv": "3.x.x",
     "jquery": "2.x.x",
     "jquery.cookie": "1.x.x",
+    "less": "^2.7.2",
+    "less-loader": "^4.0.3",
     "moment": "2.13.x",
     "respond.js": "1.x.x",
+    "style-loader": "^0.16.1",
     "webpack": "2.4.x"
   }
 }

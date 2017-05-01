@@ -5,17 +5,17 @@
         <meta http-equiv="x-ua-compatible" content="ie=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <link rel="stylesheet" href="/static/auth/core.min.css" />
-        <link rel="shortcut icon" href="/static/auth/media/favicon.ico" />
-        {{block head }}
+        <!-- <link rel="stylesheet" href="/static/auth/core.min.css" /> -->
+        <!-- <link rel="shortcut icon" href="/static/auth/media/favicon.ico" /> -->
+        {{#block "header"}}{{/block}}
     </head>
     <body>
         <!--[if lte IE 9]>
             <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
         <![endif]-->
 
-        <script src="/static/auth/core.min.js"></script>
-        {{ body }}
+        <!-- <script src="/static/auth/core.min.js"></script> -->
+        {{#block "main"}}{{/block}}
 
         <!-- Google Analytics: change UA-XXXXX-Y to be your site's ID. -->
         <script>

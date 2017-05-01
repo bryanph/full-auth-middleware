@@ -3,6 +3,9 @@
 const App = require('./app.jsx');
 const ReactDOM = require('react-dom');
 
+require('../../core/bootstrap.less')
+require('../../core/font-awesome.less')
+require('./index.less')
 
 class Page {
     static blastoff() {
