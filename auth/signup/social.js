@@ -1,5 +1,3 @@
-const mongoose = require('mongoose')
-
 const workflowMiddleware = require('../util/workflow')
 const sendmail = require('../util/sendmail')
 const path = require('path')

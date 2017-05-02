@@ -1,7 +1,5 @@
 'use strict';
 
-const mongoose = require('mongoose')
-
 const startWorkflow = require('../auth/util/workflow')
 const sendmail = require('../auth/util/sendmail')
 const slugify = require('../auth/util/slugify')

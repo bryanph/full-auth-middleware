@@ -1,7 +1,5 @@
 'use strict';
 
-const mongoose = require('mongoose')
-
 exports = module.exports = function(app, mongoose, config) {
   var categorySchema = new mongoose.Schema({
     _id: { type: String },

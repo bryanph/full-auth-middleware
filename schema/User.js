@@ -1,12 +1,10 @@
 'use strict';
 
-const mongoose = require('mongoose')
-const Schema = mongoose.Schema
 const bcrypt = require('bcrypt')
 
 module.exports = function(app, mongoose, config) {
 
-    const uiStateSchema = new Schema({
+    const uiStateSchema = new mongoose.Schema({
         shortcutWindow: {type: Boolean, default: true},
     });
 
@@ -35,7 +33,7 @@ module.exports = function(app, mongoose, config) {
 
         // custom
         // files: [ fileSchema ]
-        files: [{ type: Schema.Types.ObjectId, ref: 'File' }]
+        files: [{ type: mongoose.Schema.Types.ObjectId, ref: 'File' }]
     });
     userSchema.methods.canPlayRoleOf = function(role) {
         if (role === "admin" && this.roles.admin) {
@@ -93,8 +91,8 @@ module.exports = function(app, mongoose, config) {
 
 
 
-    const fileSchema = new Schema({
-        owner: { type: Schema.Types.ObjectId, ref: 'User' },
+    const fileSchema = new mongoose.Schema({
+        owner: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
         encoding: String,
         filename: String,
         mimetype: String,

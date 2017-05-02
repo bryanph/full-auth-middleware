@@ -68,6 +68,7 @@
     "babel-preset-stage-2": "^6.24.1",
     "bootstrap": "3.x.x",
     "css-loader": "^0.28.0",
+    "file-loader": "0.11.1",
     "font-awesome": "^4.7.0",
     "less": "^2.7.2",
     "less-loader": "^4.0.3",
@@ -77,7 +78,7 @@
     "webpack": "2.4.x"
   },
   "scripts": {
-    "build": "webpack build"
+    "build": "webpack"
   },
   "babel": {
     "presets": [

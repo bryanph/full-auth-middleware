@@ -1,7 +1,5 @@
 'use strict';
 
-const mongoose = require('mongoose')
-
 exports.find = function(req, res, next){
   req.query.q = req.query.q ? req.query.q : '';
   var regexQuery = new RegExp('^.*?'+ req.query.q +'.*$', 'i');
