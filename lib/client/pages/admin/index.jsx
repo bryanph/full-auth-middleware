@@ -12,7 +12,7 @@ const Page = {
 
         this.mainElement = ReactDOM.render(
             App,
-            window.document.getElementById('app-mount')
+            window.document.getElementById('app')
         );
     }
 };
