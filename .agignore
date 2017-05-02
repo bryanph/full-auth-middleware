@@ -1,0 +1,5 @@
+public/
+*.min.js
+*.bundle.js
+*.map
+tags

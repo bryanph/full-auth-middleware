@@ -53,7 +53,7 @@ module.exports = {
             },
             {
                 test: /\.(eot|svg|ttf|woff|woff2)$/,
-                loader: 'file-loader?name=public/fonts/[name].[ext]'
+                loader: 'file-loader?name=fonts/[name].[ext]'
             }
             // { test: /\.coffee/, loaders: ['coffee-loader'] },
             // { test: /\.json/, loaders: ['json'] },
