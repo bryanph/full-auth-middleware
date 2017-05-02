@@ -1,0 +1,25 @@
+{{#extend "mail"}}
+    {{#content "main"}}
+        <tr style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 28px; margin: 0;text-align: center;">
+            <td style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 28px; vertical-align: top; margin: 0; padding: 20px 0 40px; text-align: center; font-weight: bold;" valign="top" class="content-block">password reset</td>
+        </tr>
+        <tr style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;color:#706f70;">
+            <td style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; margin: 0; padding: 0 0 20px; color:#706f70;" valign="top" class="content-block">We received a request to reset the password for your account {{ username }}.</td>
+        </tr>
+        <tr style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;color:#706f70;">
+            <td style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; margin: 0; padding: 0 0 20px;color:#706f70;" valign="top" class="content-block">To reset your password, click the button below.</td>
+        </tr>
+        <tr style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;">
+            <td itemprop="handler" itemscope="" itemtype="http://schema.org/HttpActionHandler" style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; margin: 0; padding: 0 0 20px; text-align: center;" valign="top" class="content-block">
+                <a href="{{ resetLink }}" itemprop="url" style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; color: #FFF; text-decoration: none; line-height: 2em; font-weight: bold; text-align: center; cursor: pointer; display: inline-block; border-radius: 5px; background-color: #3A99D8; margin: 0; border-color: #3A99D8; border-style: solid; border-width: 10px 20px;" class="btn-primary">Reset password</a>
+            </td>
+        </tr>
+        <tr style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;color:#706f70;">
+            <td style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; margin: 0; padding: 0 0 20px;color:#706f70;word-break: break-all;" valign="top" class="content-block">Alternatively, if the button doesn't work, copy and paste this link in your browser</td><br/> {{ resetLink }}
+        </tr>
+        <tr style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;color:#706f70;">
+            <td style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; margin: 0; padding: 0 0 20px;color:#706f70;" valign="top" class="content-block">- {{projectName}} team</td>
+        </tr>
+    {{/content}}
+{{/extend}}
+

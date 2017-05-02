@@ -1,0 +1,14 @@
+{{#extend "layout"}}
+    {{#content "header"}}
+        <title>Auth</title>
+        <link key="layout" rel="stylesheet" href="/static/auth/layouts/default.min.css" />,
+        <link key="page" rel="stylesheet" href="/static/auth/pages/auth.min.css" />
+    {{/content}}
+
+
+    {{#content "main"}}
+    <script src="/static/auth/admin.bundle.js"></script>;
+    <script src="{{protocol}}://{{host}}{{port}}/static/{{fileName}}" />
+    <script>var INITIAL_STATE = {{{ INITIAL_STATE }}}</script>
+    {{/content}}
+{{/extend}}
