@@ -1,5 +1,6 @@
 var path = require('path');
 var webpack = require('webpack')
+var BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 module.exports = {
     devtool: 'source-map',
@@ -26,7 +27,8 @@ module.exports = {
             'process.env': {
                 'NODE_ENV': `"${process.env.NODE_ENV}"`
             }
-        })
+        }),
+        new BundleAnalyzerPlugin()
     ],
     resolve: {
         extensions: ['.js', '.jsx']

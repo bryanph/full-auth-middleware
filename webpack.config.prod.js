@@ -4,14 +4,11 @@ var webpack = require('webpack')
 module.exports = {
     devtool: 'source-map',
     entry: {
-        app: [
-            'babel-polyfill',
-            './client/app/app.js',
-        ],
-        auth: [
-            'babel-polyfill',
-            './client/auth/app.js',
-        ],
+        // account: './client/pages/account/index',
+        admin: './client/pages/admin/index',
+        // contact: './client/pages/contact/index',
+        // login: './client/pages/login/index',
+        // signup: './client/pages/signup/index'
     },
     output: {
         filename: '[name].bundle.js',
@@ -20,40 +17,50 @@ module.exports = {
         publicPath: '/static/'
     },
     plugins: [
+        new webpack.optimize.CommonsChunkPlugin({
+            name: 'core',
+            filename: 'core.min.js',
+            minSize: 2
+        }),
         new webpack.DefinePlugin({
             'process.env': {
-                'NODE_ENV': JSON.stringify('production')
-            }
+                'NODE_ENV': `"${process.env.NODE_ENV}"`
+            },
         }),
-        new webpack.optimize.UglifyJsPlugin({
-            compressor: {
-                warnings: false
-            }
-        })
+        new webpack.optimize.UglifyJsPlugin(),
+        new webpack.optimize.AggressiveMergingPlugin()
     ],
+    resolve: {
+        extensions: ['.js', '.jsx']
+    },
     module: {
         loaders: [
             {
                 test: /\.jsx?$/,
                 loader: 'babel-loader',
                 exclude: /(node_modules|bower_components)/,
-                // include: path.join(__dirname, 'client')
+                include: path.join(__dirname, 'client')
             },
-            { test: /\.coffee/, loaders: ['coffee-loader'] },
-            { test: /\.json/, loaders: ['json'] },
-            { test: /\.s?css$/, loaders: ['style', 'css', 'sass'] },
-            { test: /\.png$/, loader: "url-loader?limit=100000" },
-            { test: /\.jpg$/, loader: "file-loader" },
-            { test: /\.svg/, loader: "file-loader" }
+            {
+                test: /\.less$/,
+                use: [{
+                    loader: "style-loader" // creates style nodes from JS strings
+                }, {
+                    loader: "css-loader" // translates CSS into CommonJS
+                }, {
+                    loader: "less-loader" // compiles Less to CSS
+                }]
+            },
+            {
+                test: /\.(eot|svg|ttf|woff|woff2)$/,
+                loader: 'file-loader?name=public/fonts/[name].[ext]'
+            }
+            // { test: /\.coffee/, loaders: ['coffee-loader'] },
+            // { test: /\.json/, loaders: ['json'] },
+            // { test: /\.s?css$/, loaders: ['style', 'css', 'sass'] },
+            // { test: /\.png$/, loader: "url-loader?limit=100000" },
+            // { test: /\.jpg$/, loader: "file-loader?name=[path][name]" },
+            // { test: /\.svg/, loader: "file-loader" }
         ]
     },
-    sassLoaders: {
-        includePaths: [
-            path.resolve(__dirname, './client/scss'),
-            path.resolve(__dirname, './public'),
-        ]
-    },
-    resolve: {
-        extensions: ['', '.js', '.jsx']
-    }
 }

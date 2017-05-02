@@ -74,10 +74,11 @@
     "moment": "2.13.x",
     "promptly": "2.x.x",
     "style-loader": "^0.16.1",
-    "webpack": "2.4.x"
+    "webpack": "2.4.x",
+    "webpack-bundle-analyzer": "2.4.0"
   },
   "scripts": {
-    "build": "webpack"
+    "build": "webpack --config webpack.config.prod.js"
   },
   "babel": {
     "presets": [
