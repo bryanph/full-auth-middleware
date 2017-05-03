@@ -7,10 +7,10 @@
 
 
     {{#content "main"}}
+        <script>var INITIAL_STATE = {{{ INITIAL_STATE }}}</script>
 
         <div id="app"></div>
 
-        <script src="/static/auth/admin.bundle.js"></script>;
-        <script>var INITIAL_STATE = {{{ INITIAL_STATE }}}</script>
+        <script src="/static/auth/admin.bundle.js" />
     {{/content}}
 {{/extend}}
