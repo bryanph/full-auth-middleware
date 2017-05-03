@@ -3,7 +3,7 @@
   "author": "Bryan Haakman",
   "version": "0.0.5",
   "description": "Full authentication middleware for express",
-  "main": "lib/index.js",
+  "main": "index.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/bryanph/full-auth-middleware"
