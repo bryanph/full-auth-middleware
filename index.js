@@ -18,6 +18,7 @@ handlebars.registerHelper(layouts(handlebars));
 handlebars.registerHelper('json', (c) => JSON.stringify(c))
 // Register partials
 handlebars.registerPartial('layout', fs.readFileSync(path.join(__dirname, 'views/layouts/main.hbs'), 'utf8'));
+handlebars.registerPartial('mail', fs.readFileSync(path.join(__dirname, 'views/layouts/email.hbs'), 'utf8'));
 
 exports.middleware = require('./middleware/authentication')
 exports.setupAuthMiddleware = function(app, mongoose, config) {
