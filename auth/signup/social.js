@@ -1,6 +1,7 @@
 const workflowMiddleware = require('../util/workflow')
 const sendmail = require('../util/sendmail')
 const path = require('path')
+const { sendVerificationEmail } = require('../verification.js')
 
 exports.signupSocial = function signupSocial(req, res, next) {
 
@@ -157,9 +158,58 @@ exports.signupSocial = function signupSocial(req, res, next) {
 
             delete req.session.socialProfile;
             workflow.outcome.defaultReturnUrl = workflow.user.defaultReturnUrl();
-            workflow.emit('response');
+            if(req.app.config.requireAccountVerification) {
+                workflow.emit('sendVerificationMail')
+            } else {
+                workflow.emit('response');
+            }
         });
     });
+
+    // TODO: Reuse existing verification code - 2016-05-06
+    workflow.on('sendVerificationMail', function() {
+
+        workflow.on('generateToken', function() {
+            var crypto = require('crypto');
+            crypto.randomBytes(21, function(err, buf) {
+                if (err) {
+                    return next(err);
+                }
+
+                var token = buf.toString('hex');
+                req.app.db.models.User.encryptPassword(token, function(err, hash) {
+                    if (err) {
+                        return next(err);
+                    }
+
+                    workflow.emit('patchAccount', token, hash);
+                });
+            });
+        });
+
+        workflow.on('patchAccount', function(token, hash) {
+            var fieldsToSet = { verificationToken: hash };
+            var options = { new: true };
+            req.app.db.models.Account.findByIdAndUpdate(req.user.roles.account, fieldsToSet, options, function(err, account) {
+                if (err) {
+                    return next(err);
+                }
+
+                sendVerificationEmail(req, res, {
+                    email: req.user.email,
+                    verificationToken: token,
+                    onSuccess: function() {
+                        return workflow.emit('response');
+                    },
+                    onError: function(err) {
+                        return next(err);
+                    }
+                });
+            });
+        });
+
+        workflow.emit('generateToken');
+    })
 
     workflow.emit('validate');
 };
