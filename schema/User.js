@@ -20,11 +20,11 @@ module.exports = function(app, mongoose, config) {
         timeCreated: { type: Date, default: Date.now },
         resetPasswordToken: String,
         resetPasswordExpires: Date,
-        twitter: {},
-        github: {},
-        facebook: {},
-        google: {},
-        tumblr: {},
+        twitter: mongoose.Schema.Types.Mixed,
+        github: mongoose.Schema.Types.Mixed,
+        facebook: mongoose.Schema.Types.Mixed,
+        google: mongoose.Schema.Types.Mixed,
+        tumblr: mongoose.Schema.Types.Mixed,
         search: [String],
         uiState: { type: uiStateSchema, default: uiStateSchema },
         avatar: String,
@@ -87,10 +87,6 @@ module.exports = function(app, mongoose, config) {
     userSchema.index({ search: 1 });
     userSchema.set('autoIndex', (config.env === 'development'));
 
-    app.db.model('User', userSchema);
-
-
-
     const fileSchema = new mongoose.Schema({
         owner: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
         encoding: String,
@@ -101,6 +97,7 @@ module.exports = function(app, mongoose, config) {
         url: String,
     })
 
+    app.db.model('User', userSchema);
     app.db.model('File', fileSchema);
     // mongoose.model('User', userSchema);
 };

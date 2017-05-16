@@ -67,7 +67,7 @@ module.exports = function(app, config) {
     function authView(req, res, next) {
         // TODO: require users to provide their own template for this behaviour - 2017-05-01
         res.write(authTemplate({
-            port: process.env.NODE_ENV === 'development' ? ':3001' : '',
+            port: process.env.NODE_ENV === 'development' ? ':3000' : '',
             fileName: bundleFileName,
             protocol: process.env.NODE_ENV === 'development' ? 'http' : 'https',
             host: req.headers.host.split(":")[0],

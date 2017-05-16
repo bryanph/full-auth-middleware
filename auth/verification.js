@@ -76,7 +76,7 @@ exports.verification = function verification(req, res, next) {
 
       console.log("sending verification email...");
 
-      sendVerificationEmail(req, res, {
+      exports.sendVerificationEmail(req, res, {
         email: req.user.email,
         verificationToken: token,
         onSuccess: function() {
@@ -171,7 +171,7 @@ exports.resendVerification = function resendVerification(req, res, next) {
 
       console.log('resending verification email...', token);
 
-      sendVerificationEmail(req, res, {
+      exports.sendVerificationEmail(req, res, {
         email: workflow.user.email,
         verificationToken: token,
         onSuccess: function() {
