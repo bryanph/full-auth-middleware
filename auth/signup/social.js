@@ -1,7 +1,8 @@
 const workflowMiddleware = require('../util/workflow')
 const sendmail = require('../util/sendmail')
 const path = require('path')
-const { sendVerificationEmail } = require('../verification.js')
+const sendVerificationEmail = require('../email/verification.js')
+const sendWelcomeEmail = require('../email/welcome.js')
 
 exports.signupSocial = function signupSocial(req, res, next) {
 
@@ -128,26 +129,18 @@ exports.signupSocial = function signupSocial(req, res, next) {
     });
 
     workflow.on('sendWelcomeEmail', function() {
-        sendmail(req, res, {
-            from: req.app.config.smtp.from.name +' <'+ req.app.config.smtp.from.address +'>',
-            to: req.body.email,
-            subject: 'Your '+ req.app.config.projectName +' Account',
-            textPath: 'email/signup-text.hbs',
-            htmlPath: 'email/signup-html.hbs',
-            locals: {
-                username: workflow.user.username,
-                email: req.body.email,
-                loginURL: req.protocol +'://'+ req.headers.host +'/login/',
-                projectName: req.app.config.projectName
+        sendWelcomeEmail(req, res, {
+            username: workflow.user.username,
+            email: req.body.email,
+            onSuccess: function() {
+                return workflow.emit('logUserIn');
             },
-            success: function(message) {
-                workflow.emit('logUserIn');
-            },
-            error: function(err) {
+            onError: function(err) {
                 console.log('Error Sending Welcome Email: '+ err);
                 workflow.emit('logUserIn');
+                // return next(err);
             }
-        });
+        })
     });
 
     workflow.on('logUserIn', function() {
