@@ -120,6 +120,7 @@ module.exports = function(app, mongoose, config) {
             clientID: config.oauth.github.key,
             clientSecret: config.oauth.github.secret,
             callbackURL: config.oauth.github.callbackUrl,
+            scope: ['user:email'],
         },
           function(token, tokenSecret, profile, done) {
             done(null, false, {

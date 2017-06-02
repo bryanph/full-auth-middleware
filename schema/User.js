@@ -24,7 +24,6 @@ module.exports = function(app, mongoose, config) {
         github: mongoose.Schema.Types.Mixed,
         facebook: mongoose.Schema.Types.Mixed,
         google: mongoose.Schema.Types.Mixed,
-        tumblr: mongoose.Schema.Types.Mixed,
         search: [String],
         uiState: { type: uiStateSchema, default: uiStateSchema },
         avatar: String,

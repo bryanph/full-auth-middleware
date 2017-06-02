@@ -2,7 +2,7 @@ const express = require('express')
 const passport = require('passport')
 
 const signup = require('../auth/signup').signup
-const { signupSocial, signupTwitter, signupGoogle, signupGithub, signupFacebook } = require('../auth/signup/social')
+const { signupTwitter, signupGoogle, signupGithub, signupFacebook } = require('../auth/signup/social')
 
 const login = require('../auth/login').login
 const reset = require('../auth/reset.js')
@@ -25,28 +25,29 @@ module.exports = function(app, config) {
     // TODO: generate token on signup - 2016-05-06
     router.post('/signup/', signup);
 
-    // TODO: Merge login and signup for social auth - 2016-04-28
-    router.post('/signup/social/', signupSocial);
     router.get('/signup/twitter/', 
                passport.authenticate('twitter', {
                    callbackURL:  "/auth/signup/twitter/callback",
                }));
     router.get('/signup/twitter/callback/', signupTwitter);
+
     router.get('/signup/github/', 
                passport.authenticate('github', {
                    callbackURL:  "/auth/signup/github/callback",
                    scope: ['user:email'],
                }));
     router.get('/signup/github/callback/', signupGithub);
+
     router.get('/signup/google/', 
                passport.authenticate('google', {
-                   callbackURL:  "/auth/signup/google/callback/",
+                   callbackURL:  "/auth/signup/google/callback",
                    scope: ['profile', 'email'] 
                }));
     router.get('/signup/google/callback/', signupGoogle);
+
     router.get('/signup/facebook/', 
                passport.authenticate('facebook', {
-                   callbackURL: "/auth/signup/facebook/callback/",
+                   callbackURL: "/auth/signup/facebook/callback",
                    scope: ['email','public_profile'],
                }));
     router.get('/signup/facebook/callback/', signupFacebook);
@@ -79,7 +80,6 @@ module.exports = function(app, config) {
                 oauthGitHub: !!req.app.config.oauth.github.key,
                 oauthFacebook: !!req.app.config.oauth.facebook.key,
                 oauthGoogle: !!req.app.config.oauth.google.key,
-                oauthTumblr: !!req.app.config.oauth.tumblr.key
             }),
         }))
         res.end()

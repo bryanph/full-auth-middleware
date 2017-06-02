@@ -18,7 +18,6 @@ exports.signupView = function signupView(req, res) {
                 oauthGitHub: !!req.app.config.oauth.github.key,
                 oauthFacebook: !!req.app.config.oauth.facebook.key,
                 oauthGoogle: !!req.app.config.oauth.google.key,
-                oauthTumblr: !!req.app.config.oauth.tumblr.key
             }
         }))
         res.end()
