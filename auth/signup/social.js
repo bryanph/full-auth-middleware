@@ -2,7 +2,9 @@ const workflowMiddleware = require('../util/workflow')
 const sendmail = require('../util/sendmail')
 const path = require('path')
 const sendVerificationEmail = require('../email/verification.js')
-const sendWelcomeEmail = require('../email/welcome.js')
+const submitWelcomeEmail = require('../email/welcome.js')
+
+const errors = require('../../util/errors')
 
 exports.signupSocial = function signupSocial(req, res, next) {
 
@@ -83,7 +85,6 @@ exports.signupSocial = function signupSocial(req, res, next) {
         };
         fieldsToSet[req.session.socialProfile.provider] = { id: req.session.socialProfile.id };
 
-        // console.log(req.app.db.models);
         req.app.db.models.User.create(fieldsToSet, function(err, user) {
             if (err) {
                 return workflow.emit('exception', err);
@@ -207,11 +208,115 @@ exports.signupSocial = function signupSocial(req, res, next) {
     workflow.emit('validate');
 };
 
+const logUserIn = async function(req, res, user) {
+    return new Promise((resolve, reject) => {
+        req.login(user, function(err) {
+            if (err) {
+                reject(err)
+            }
+
+            res.redirect(req.app.config.appUrl);
+            resolve()
+        });
+    })
+}
+
+const sendWelcomeEmail = async function(req, res, email, username) {
+    return new Promise((resolve, reject) => {
+        submitWelcomeEmail(req, res, {
+            username,
+            email,
+            onSuccess: function() {
+                resolve()
+            },
+            onError: function(err) {
+                console.error('Error Sending Welcome Email: '+ err);
+                resolve()
+                // return next(err);
+            }
+        })
+    })
+}
+
+const duplicateCheck = async function(req, email, username) {
+    // TODO: handle the error properly - 2017-06-02
+    console.log('called duplicateCheck');
+    const user = await req.app.db.models.User.findOne({
+        $or: [{ username }, { email }]
+    })
+
+    if (user) {
+        return false
+    }
+
+    return true
+}
+
+const createUser = async function(req, email, username, displayName, avatar, provider, providerId) {
+    console.log('called createUser');
+    const fieldsToSet = {
+        isActive: 'yes',
+        username,
+        email,
+        search: [
+            username,
+            email,
+        ],
+        displayName,
+        avatar,
+        [provider]: { id: providerId }
+    };
+
+    const user = await req.app.db.models.User.create(fieldsToSet)
+    return user
+}
+
+const createAccount = async function(req, user) {
+    console.log('called createAccount');
+    const fieldsToSet = {
+        isVerified: 'yes',
+        user: {
+            id: user._id,
+            name: user.username
+        },
+    };
+
+    const account = await req.app.db.models.Account.create(fieldsToSet)
+
+    return account
+}
+
+const completeSocialSignup = async function(req, res, next, email, username, displayName, avatar, provider, providerId) {
+    console.log('called completeSocialSignup');
+    const noDuplicate = await duplicateCheck(req, email, username)
+
+    if (!noDuplicate) {
+        return next({
+            type: errors.VALIDATION_ERROR, // validation
+            errFor: {
+                email: `Your ${provider} email is already being used by another user.`
+            }
+        })
+    }
+
+    let user = await createUser(req, email, username, displayName, avatar, provider, providerId)
+    const account = await createAccount(req, user)
+
+    user.roles.account = account._id;
+    user = await user.save()
+
+    sendWelcomeEmail(req, res, email, username)
+    return logUserIn(req, res, user)
+}
+
 exports.signupTwitter = function signupTwitter(req, res, next) {
     req._passport.instance.authenticate('twitter', function(err, user, info) {
 
         if (!info || !info.profile) {
-            return res.redirect('/auth/signup/');
+            return next({
+                type: errors.SOCIAL_AUTH_FAILED, // validation
+                provider: 'twitter',
+            })
         }
 
         req.app.db.models.User.findOne({ 'twitter.id': info.profile.id }, function(err, user) {
@@ -220,26 +325,17 @@ exports.signupTwitter = function signupTwitter(req, res, next) {
             }
 
             if (!user) {
-                req.session.socialProfile = info.profile;
-
-                res.redirect('/auth/signup/social')
+                const providerId = info.profile.id
+                const email = info.profile.emails && info.profile.emails[0].value
+                const avatar = !info.profile._json.default_profile_image && info.profile._json.profile_image_url_https
+                const displayName = info.profile.displayName
+                return completeSocialSignup(req, res, next, email, email, displayName, avatar, 'twitter', providerId)
+                    .catch(next)
             }
             else {
                 // TODO: just redirect to the app - 2016-05-02
-                req.login(user, function(err) {
-                    if (err) {
-                        return next(err);
-                    }
-
-                    var avatar = info.profile._json.profile_image_url_https
-
-                    req.app.db.models.User.findOneAndUpdate({_id: user._id}, {$set: { avatar: avatar }}, { new: true })
-                        .then(user => {
-                            res.redirect(req.app.config.appUrl);
-                        })
-                        .catch(next)
-
-                });
+                return logUserIn(req, res, user)
+                    .catch(next)
             }
         });
     })(req, res, next);
@@ -248,9 +344,11 @@ exports.signupTwitter = function signupTwitter(req, res, next) {
 exports.signupGoogle = function signupGoogle(req, res, next) {
     req._passport.instance.authenticate('google', function(err, user, info) {
         if (!info || !info.profile) {
-            return res.redirect('/auth/signup/');
+            return next({
+                type: errors.SOCIAL_AUTH_FAILED, // validation
+                provider: 'google',
+            })
         }
-
         req.app.db.models.User.findOne({ 'google.id': info.profile.id }, function(err, user) {
             if (err) {
                 return next(err);

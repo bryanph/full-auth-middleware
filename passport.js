@@ -49,6 +49,7 @@ module.exports = function(app, mongoose, config) {
         passport.use(new TwitterStrategy({
             consumerKey: config.oauth.twitter.key,
             consumerSecret: config.oauth.twitter.secret,
+            includeEmail: true,
         },
           function(token, tokenSecret, profile, done) {
             done(null, false, {

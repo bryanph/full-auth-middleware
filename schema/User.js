@@ -28,8 +28,7 @@ module.exports = function(app, mongoose, config) {
         search: [String],
         uiState: { type: uiStateSchema, default: uiStateSchema },
         avatar: String,
-        firstName: String,
-        lastName: String,
+        displayName: String,
 
         // custom
         // files: [ fileSchema ]
