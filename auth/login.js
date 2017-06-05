@@ -4,112 +4,113 @@ const passport = require('passport')
 const workflowMiddleware = require('./util/workflow.js')
 
 exports.loginView = function loginView(req, res) {
-  if (req.isAuthenticated()) {
-    res.redirect(req.user.defaultReturnUrl());
-  }
-  else {
-      let template = req.app.utils.loadTemplate('signup/index.hbs')
-      res.write(template({
+    if (req.isAuthenticated()) {
+        res.redirect(req.user.defaultReturnUrl());
+    }
+    else {
+        let template = req.app.utils.loadTemplate('signup/index.hbs')
+        res.write(template({
             oauthMessage: '',
             oauthTwitter: !!req.app.config.oauth.twitter.key,
             oauthGitHub: !!req.app.config.oauth.github.key,
             oauthFacebook: !!req.app.config.oauth.facebook.key,
             oauthGoogle: !!req.app.config.oauth.google.key,
-          }))
-      res.end()
-  }
+        }))
+        res.end()
+    }
 }
 
 exports.login = function(req, res){
 
-  let workflow = workflowMiddleware(req, res)
+    let workflow = workflowMiddleware(req, res)
 
-  workflow.on('validate', function() {
+    workflow.on('validate', function() {
 
-    if (!req.body.username) {
-      workflow.outcome.errfor.username = 'required';
-    }
-
-    if (!req.body.password) {
-      workflow.outcome.errfor.password = 'required';
-    }
-
-    if (workflow.hasErrors()) {
-      return workflow.emit('response');
-    }
-
-    workflow.emit('abuseFilter');
-  });
-
-  workflow.on('abuseFilter', function() {
-    var getIpCount = function(done) {
-      var conditions = { ip: req.ip };
-      req.app.db.models.LoginAttempt.count(conditions, function(err, count) {
-        if (err) {
-          return done(err);
+        if (!req.body.username) {
+            workflow.outcome.errfor.username = 'required';
         }
 
-        done(null, count);
-      });
-    };
-
-    var getIpUserCount = function(done) {
-      var conditions = { ip: req.ip, user: req.body.username };
-      req.app.db.models.LoginAttempt.count(conditions, function(err, count) {
-        if (err) {
-          return done(err);
+        if (!req.body.password) {
+            workflow.outcome.errfor.password = 'required';
         }
 
-        done(null, count);
-      });
-    };
+        if (workflow.hasErrors()) {
+            return workflow.emit('response');
+        }
 
-    var asyncFinally = function(err, results) {
-      if (err) {
-        return workflow.emit('exception', err);
-      }
+        workflow.emit('abuseFilter');
+    });
 
-      if (results.ip >= req.app.config.loginAttempts.forIp || results.ipUser >= req.app.config.loginAttempts.forIpAndUser) {
-        workflow.outcome.errors.push('You\'ve reached the maximum number of login attempts. Please try again later.');
-        return workflow.emit('response');
-      }
-      else {
-        workflow.emit('attemptLogin');
-      }
-    };
+    workflow.on('abuseFilter', function() {
+        var getIpCount = function(done) {
+            var conditions = { ip: req.ip };
+            req.app.db.models.LoginAttempt.count(conditions, function(err, count) {
+                if (err) {
+                    return done(err);
+                }
 
-    require('async').parallel({ ip: getIpCount, ipUser: getIpUserCount }, asyncFinally);
-  });
+                done(null, count);
+            });
+        };
 
-  workflow.on('attemptLogin', function() {
-    passport.authenticate('local', function(err, user, info) {
-      if (err) {
-        return workflow.emit('exception', err);
-      }
+        var getIpUserCount = function(done) {
+            var conditions = { ip: req.ip, user: req.body.username };
+            req.app.db.models.LoginAttempt.count(conditions, function(err, count) {
+                if (err) {
+                    return done(err);
+                }
 
-      if (!user) {
-        var fieldsToSet = { ip: req.ip, user: req.body.username };
-        req.app.db.models.LoginAttempt.create(fieldsToSet, function(err, doc) {
-          if (err) {
-            return workflow.emit('exception', err);
-          }
+                done(null, count);
+            });
+        };
 
-          workflow.outcome.errors.push('Username and password combination not found or your account is inactive.');
-          return workflow.emit('response');
-        });
-      }
-      else {
-        req.login(user, function(err) {
-          if (err) {
-            return workflow.emit('exception', err);
-          }
+        var asyncFinally = function(err, results) {
+            if (err) {
+                return workflow.emit('exception', err);
+            }
 
-          workflow.emit('response');
-        });
-      }
-    })(req, res);
-  });
+            if (results.ip >= req.app.config.loginAttempts.forIp || results.ipUser >= req.app.config.loginAttempts.forIpAndUser) {
+                workflow.outcome.errors.push('You\'ve reached the maximum number of login attempts. Please try again later.');
+                return workflow.emit('response');
+            }
+            else {
+                workflow.emit('attemptLogin');
+            }
+        };
 
-  workflow.emit('validate');
+        require('async').parallel({ ip: getIpCount, ipUser: getIpUserCount }, asyncFinally);
+    });
+
+    workflow.on('attemptLogin', function() {
+        passport.authenticate('local', function(err, user, info) {
+            if (err) {
+                return workflow.emit('exception', err);
+            }
+
+            if (!user) {
+                var fieldsToSet = { ip: req.ip, user: req.body.username };
+                // TODO: just set this in session storage instead - 2017-06-05
+                req.app.db.models.LoginAttempt.create(fieldsToSet, function(err, doc) {
+                    if (err) {
+                        return workflow.emit('exception', err);
+                    }
+
+                    workflow.outcome.errors.push('Username and password combination not found or your account is inactive.');
+                    return workflow.emit('response');
+                });
+            }
+            else {
+                req.login(user, function(err) {
+                    if (err) {
+                        return workflow.emit('exception', err);
+                    }
+
+                    workflow.emit('response');
+                });
+            }
+        })(req, res);
+    });
+
+    workflow.emit('validate');
 }
 
