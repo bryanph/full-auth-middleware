@@ -88,7 +88,7 @@ module.exports = function(app, config) {
     // router.get('/account/verification/', verification);
     router.get('/account/verification/', verificationFlow, authView);
     router.post('/account/verification/', resendVerification);
-    router.get('/account/verification/:token/', verify);
+    router.get('/account/verification/:token/', verificationFlow, verify);
 
     router.get('/*', authFlow, authView);
 

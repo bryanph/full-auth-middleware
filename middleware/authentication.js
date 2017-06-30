@@ -75,7 +75,7 @@ function verificationFlow(req, res, next) {
         return res.redirect('/app')
     } 
     else if (!req.isAuthenticated()) {
-        res.redirect('/auth/signup')
+        res.redirect('/auth/login')
     }
 
     return next()
