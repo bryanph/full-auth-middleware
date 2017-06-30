@@ -10,7 +10,7 @@ const forgot = require('../auth/forgot')
 const logout = require('../auth/logout')
 
 const { verify, resendVerification } = require('../auth/verification')
-const { authFlow, verificationFlow } = require('../middleware/authentication')
+const { authFlow, verificationFlow, ensureAuthenticated } = require('../middleware/authentication')
 
 module.exports = function(app, config) {
 
@@ -88,7 +88,7 @@ module.exports = function(app, config) {
     // router.get('/account/verification/', verification);
     router.get('/account/verification/', verificationFlow, authView);
     router.post('/account/verification/', resendVerification);
-    router.get('/account/verification/:token/', verificationFlow, verify);
+    router.get('/account/verification/:token/', ensureAuthenticated, verify);
 
     router.get('/*', authFlow, authView);
 
