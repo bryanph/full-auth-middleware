@@ -179,10 +179,6 @@ exports.verify = function verify(req, res, next) {
                 return next(err);
             }
 
-            if (req.app.config.onSignup) {
-                req.app.config.onSignup(req.user, account)
-            }
-
             return res.redirect(req.user.defaultReturnUrl());
         });
     });

@@ -114,7 +114,7 @@ exports.signup = function signup(req, res, next) {
 
     workflow.on('createAccount', function() {
         var fieldsToSet = {
-            isVerified: req.app.config.requireAccountVerification ? 'no' : 'yes',
+            isVerified: 'no',
             'name.full': workflow.user.username,
             user: {
                 id: workflow.user._id,
@@ -143,6 +143,7 @@ exports.signup = function signup(req, res, next) {
     });
 
     workflow.on('sendWelcomeEmail', function() {
+
         sendWelcomeEmail(req, res, {
             username: req.body.username,
             email: req.body.email,
@@ -180,11 +181,14 @@ exports.signup = function signup(req, res, next) {
                     } else {
                         workflow.emit('response');
                     }
+
+                    if (req.app.config.onSignup) {
+                        req.app.config.onSignup(req.user)
+                    }
                 });
             }
         })(req, res);
     });
-
 
     // TODO: Reuse existing verification code - 2016-05-06
     workflow.on('sendVerificationMail', function() {
