@@ -14,7 +14,7 @@ const propTypes = {
 };
 const defaultValues = {
     username: '',
-    sort: '_id',
+    sort: '-timeCreated',
     limit: '20',
     page: '1'
 };
@@ -72,6 +72,8 @@ class FilterForm extends React.Component {
                         <option value="-_id">id &#9660;</option>
                         <option value="name">name &#9650;</option>
                         <option value="-name">name &#9660;</option>
+                        <option value="timeCreated">created &#9650;</option>
+                        <option value="-timeCreated">created &#9660;</option>
                     </SelectControl>
                 </div>
                 <div className="col-sm-2">

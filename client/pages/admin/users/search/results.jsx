@@ -2,6 +2,7 @@
 const PropTypes = require('prop-types');
 const React = require('react');
 const ReactRouter = require('react-router-dom');
+const Moment = require('moment');
 
 
 const Link = ReactRouter.Link;
@@ -13,6 +14,7 @@ const propTypes = {
 class Results extends React.Component {
     render() {
 
+        console.log(this.props.data)
         const rows = this.props.data.map((record) => {
 
             return (
@@ -28,6 +30,7 @@ class Results extends React.Component {
                     <td>{record.username}</td>
                     <td>{record.email}</td>
                     <td>{record.isActive}</td>
+                    <td>{Moment(record.timeCreated).format('MMMM Do YYYY, h:mm:ss a')}</td>
                     <td className="nowrap">{record._id}</td>
                 </tr>
             );
@@ -42,6 +45,7 @@ class Results extends React.Component {
                             <th>username</th>
                             <th className="stretch">email</th>
                             <th>active</th>
+                            <th>created</th>
                             <th>id</th>
                         </tr>
                     </thead>
