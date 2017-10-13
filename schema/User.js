@@ -31,7 +31,8 @@ module.exports = function(app, mongoose, config) {
 
         // custom
         // files: [ fileSchema ]
-        files: [{ type: mongoose.Schema.Types.ObjectId, ref: 'File' }]
+        files: [{ type: mongoose.Schema.Types.ObjectId, ref: 'File' }],
+        rootCollectionId: String,
     });
     userSchema.methods.canPlayRoleOf = function(role) {
         if (role === "admin" && this.roles.admin) {

@@ -101,12 +101,10 @@ const completeSocialSignup = async function(req, res, next, email, username, dis
         sendWelcomeEmail(req, res, email, username)
     }
 
-    if (req.app.config.onSignup ) {
-        req.app.config.onSignup(user, account)
-    }
+    const onSignupPromise = req.app.config.onSignup ? req.app.config.onSignup(user, account) : Promise.resolve()
 
-
-    return logUserIn(req, res, user)
+    return onSignupPromise
+        .then(() => logUserIn(req, res, user))
 }
 
 exports.signupTwitter = function signupTwitter(req, res, next) {

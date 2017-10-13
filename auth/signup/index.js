@@ -176,15 +176,14 @@ exports.signup = function signup(req, res, next) {
 
                     workflow.outcome.defaultReturnUrl = user.defaultReturnUrl();
 
-                    if(req.app.config.requireAccountVerification) {
-                        workflow.emit('sendVerificationMail')
-                    } else {
-                        workflow.emit('response');
-                    }
-
-                    if (req.app.config.onSignup) {
-                        req.app.config.onSignup(req.user)
-                    }
+                    const onSignupPromise = req.app.config.onSignup ? req.app.config.onSignup(req.user) : Promise.resolve()
+                    onSignupPromise.then(() => {
+                        if(req.app.config.requireAccountVerification) {
+                            workflow.emit('sendVerificationMail')
+                        } else {
+                            workflow.emit('response');
+                        }
+                    })
                 });
             }
         })(req, res);
