@@ -73,7 +73,7 @@ const logUserIn = async function(req, res, user) {
                 reject(err)
             }
 
-            res.redirect(req.app.config.appUrl);
+            res.redirect(req.session.redirectUrl || req.app.config.appUrl);
             resolve()
         });
     })

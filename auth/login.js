@@ -3,23 +3,6 @@
 const passport = require('passport')
 const workflowMiddleware = require('./util/workflow.js')
 
-exports.loginView = function loginView(req, res) {
-    if (req.isAuthenticated()) {
-        res.redirect(req.user.defaultReturnUrl());
-    }
-    else {
-        let template = req.app.utils.loadTemplate('signup/index.hbs')
-        res.write(template({
-            oauthMessage: '',
-            oauthTwitter: !!req.app.config.oauth.twitter.key,
-            oauthGitHub: !!req.app.config.oauth.github.key,
-            oauthFacebook: !!req.app.config.oauth.facebook.key,
-            oauthGoogle: !!req.app.config.oauth.google.key,
-        }))
-        res.end()
-    }
-}
-
 exports.login = function(req, res){
 
     let workflow = workflowMiddleware(req, res)

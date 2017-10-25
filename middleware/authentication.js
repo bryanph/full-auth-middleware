@@ -26,6 +26,7 @@ function ensureVerified(req, res, next) {
         return next()
     } 
 
+    req.session.redirectUrl = req.url
     return res.redirect('/auth/login')
 }
 
