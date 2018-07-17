@@ -59,8 +59,7 @@
     "webpack-bundle-analyzer": "2.4.0",
     "xhr": "2.4.0"
   },
-  "devDependencies": {
-  },
+  "devDependencies": {},
   "scripts": {
     "build": "webpack --config webpack.config.prod.js"
   },

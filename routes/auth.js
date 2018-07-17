@@ -27,27 +27,27 @@ module.exports = function(app, config) {
 
     router.get('/signup/twitter/', 
                passport.authenticate('twitter', {
-                   callbackURL:  "/auth/signup/twitter/callback",
+                   callbackURL: config.oauth.twitter.callbackUrl,
                }));
     router.get('/signup/twitter/callback/', signupTwitter);
 
     router.get('/signup/github/', 
                passport.authenticate('github', {
-                   callbackURL:  "/auth/signup/github/callback",
+                   callbackURL: config.oauth.github.callbackUrl,
                    scope: ['user:email'],
                }));
     router.get('/signup/github/callback/', signupGithub);
 
     router.get('/signup/google/', 
                passport.authenticate('google', {
-                   callbackURL:  "/auth/signup/google/callback",
+                   callbackURL: config.oauth.google.callbackUrl,
                    scope: ['profile', 'email'] 
                }));
     router.get('/signup/google/callback/', signupGoogle);
 
     router.get('/signup/facebook/', 
                passport.authenticate('facebook', {
-                   callbackURL: "/auth/signup/facebook/callback",
+                   callbackURL: config.oauth.facebook.callbackUrl,
                    scope: ['email','public_profile'],
                }));
     router.get('/signup/facebook/callback/', signupFacebook);
