@@ -41,6 +41,10 @@ exports.setupAuthMiddleware = function(app, mongoose, config) {
     require('./schema/Account')(app, mongoose, config);
     require('./schema/LoginAttempt')(app, mongoose, config);
 
+    if (config.models && config.models.custom) {
+        config.models.custom(app)
+    }
+
 
     // TODO: what if we want this served by nginx or something? - 2016-08-09
     app.use('/static/auth', express.static(__dirname + '/public'))
