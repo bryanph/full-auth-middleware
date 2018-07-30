@@ -32,7 +32,7 @@ exports.signup = function signup(req, res, next) {
         if (!req.body.username) {
             workflow.outcome.errfor.username = 'required';
         }
-        else if (!/^[a-zA-Z0-9\-\_\.\+]+@[a-zA-Z0-9\-\_\.]+\.[a-zA-Z0-9\-\_]+$/.test(req.body.username)) {
+        else if (!/^[a-zA-Z0-9]+([_ -]?[a-zA-Z0-9])*$/.test(req.body.username)) {
             workflow.outcome.errfor.username = 'invalid username format';
         }
 

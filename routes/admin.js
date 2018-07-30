@@ -1,18 +1,7 @@
-
 const express = require('express')
 const passport = require('passport')
 
-const signup = require('../auth/signup')
-const { signupSocial, signupTwitter, signupGoogle, signupGithub } = require('../auth/signup/social')
-
-const login = require('../auth/login').login
-const reset = require('../auth/reset.js')
-const forgot = require('../auth/forgot')
-const logout = require('../auth/logout')
-
-const { verify, resendVerification } = require('../auth/verification')
-const { isVerified, ensureAuthenticated, ensureAccount, ensureAdmin } = require('../middleware/authentication')
-const { authFlow, verificationFlow } = require('../middleware/authentication')
+const { ensureAuthenticated, ensureAdmin } = require('../middleware/authentication')
 
 module.exports = function(app, config) {
 

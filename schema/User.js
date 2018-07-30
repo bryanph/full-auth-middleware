@@ -26,6 +26,28 @@ module.exports = function(app, mongoose, config) {
 
         ...((config.models && config.models.user) || {})
     });
+
+    userSchema.statics.getById = function(id) {
+        return this
+            // .findOne({ _id: id }, { password: 0 })
+            .findOne({ _id: id })
+            .populate('roles.admin')
+            .populate('roles.account')
+            .then(function(user) {
+                if (user && user.roles && user.roles.admin) {
+
+                    return user;
+                    // user.roles.admin.populate("groups", function(err, admin) {
+                    //     // TODO: must be admin here? - 2016-08-11
+                    //     return user
+                    // });
+                }
+                else {
+                    return user;
+                }
+            });
+    }
+
     userSchema.methods.canPlayRoleOf = function(role) {
         if (role === "admin" && this.roles.admin) {
             return true;
@@ -62,10 +84,8 @@ module.exports = function(app, mongoose, config) {
             });
         });
     };
-    userSchema.statics.validatePassword = function(password, hash, done) {
-        bcrypt.compare(password, hash, function(err, res) {
-            done(err, res);
-        });
+    userSchema.statics.validatePassword = function(password, hash) {
+        return bcrypt.compare(password, hash)
     };
     userSchema.plugin(require('./plugins/pagedFind'));
     userSchema.index({ username: 1 }, { unique: true });

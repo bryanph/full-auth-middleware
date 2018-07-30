@@ -4,6 +4,7 @@ const passport = require('passport')
 const signup = require('../auth/signup').signup
 const { signupTwitter, signupGoogle, signupGithub, signupFacebook } = require('../auth/signup/social')
 
+const { getUser, updateUser } = require('../auth/user');
 const login = require('../auth/login').login
 const reset = require('../auth/reset.js')
 const forgot = require('../auth/forgot')
@@ -15,6 +16,9 @@ const { authFlow, verificationFlow, ensureAuthenticated } = require('../middlewa
 module.exports = function(app, config) {
 
     let router = express.Router();
+
+    router.get('/user/', ensureAuthenticated, getUser);
+    router.patch('/user/', ensureAuthenticated, updateUser);
 
     router.post('/login/', login);
     router.post('/login/forgot/', forgot);
