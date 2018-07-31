@@ -5,7 +5,7 @@ const usernameRegex = /^[a-zA-Z0-9]+([_ -]?[a-zA-Z0-9])*$/
 const emailRegex = /^[a-zA-Z0-9\-\_\.\+]+@[a-zA-Z0-9\-\_\.]+\.[a-zA-Z0-9\-\_]+$/
 const passwordLengthRegex = RegExp(`(?=.{${MIN_PASSWORD_LENGTH},})`) // minimum 8 chars
 
-export function testUsername(username, required=true) {
+export function testUsername(username, { required=true }={}) {
     if (required && !username) {
         return [ false, "required" ];
     }
@@ -16,7 +16,7 @@ export function testUsername(username, required=true) {
     return [ true, null ];
 }
 
-export function testEmail(email, { required=true }) {
+export function testEmail(email, { required=true }={}) {
     if (required && !email) {
         return [ false, "required" ];
     }
@@ -28,7 +28,7 @@ export function testEmail(email, { required=true }) {
 }
 
 
-export function testPassword(password, { required=true }) {
+export function testPassword(password, { required=true }={}) {
     if (required && !password) {
         return [ false, "required" ];
     }
