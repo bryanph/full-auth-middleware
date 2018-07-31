@@ -42,18 +42,16 @@ module.exports = function(req, res){
         return workflow.emit('response');
       }
 
-      req.app.db.models.User.validatePassword(req.params.token, user.resetPasswordToken, function(err, isValid) {
-        if (err) {
-          return workflow.emit('exception', err);
-        }
+        req.app.db.models.User.validatePassword(req.params.token, user.resetPasswordToken)
+            .then((isValid) => {
+                if (!isValid) {
+                    workflow.outcome.errors.push('Invalid request.');
+                    return workflow.emit('response');
+                }
 
-        if (!isValid) {
-          workflow.outcome.errors.push('Invalid request.');
-          return workflow.emit('response');
-        }
-
-        workflow.emit('patchUser', user);
-      });
+                workflow.emit('patchUser', user);
+            })
+            .catch(err => workflow.emit('exception', err))
     });
   });
 

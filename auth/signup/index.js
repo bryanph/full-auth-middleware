@@ -24,27 +24,29 @@ exports.signupView = function signupView(req, res) {
     }
 }
 
+const { testUsername, testEmail, testPassword } = require('../regex')
+
 exports.signup = function signup(req, res, next) {
 
     let workflow = workflowMiddleware(req, res)
 
     workflow.on('validate', function() {
-        if (!req.body.username) {
-            workflow.outcome.errfor.username = 'required';
-        }
-        else if (!/^[a-zA-Z0-9]+([_ -]?[a-zA-Z0-9])*$/.test(req.body.username)) {
-            workflow.outcome.errfor.username = 'invalid username format';
+
+        let success, failReason;
+
+        [ success, failReason ] = testUsername(req.body.username);
+        if (!success) {
+            workflow.outcome.errfor.username = failReason;
         }
 
-        if (!req.body.email) {
-            workflow.outcome.errfor.email = 'required';
-        }
-        else if (!/^[a-zA-Z0-9\-\_\.\+]+@[a-zA-Z0-9\-\_\.]+\.[a-zA-Z0-9\-\_]+$/.test(req.body.email)) {
-            workflow.outcome.errfor.email = 'invalid email format';
+        [ success, failReason ] = testEmail(req.body.email);
+        if (!success) {
+            workflow.outcome.errfor.email = failReason;
         }
 
-        if (!req.body.password) {
-            workflow.outcome.errfor.password = 'required';
+        [ success, failReason ] = testPassword(req.body.password);
+        if (!success) {
+            workflow.outcome.errfor.password = failReason;
         }
 
         if (workflow.hasErrors()) {

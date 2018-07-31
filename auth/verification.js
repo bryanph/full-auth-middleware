@@ -2,6 +2,7 @@
 
 const workflowMiddleware = require('./util/workflow.js')
 const sendVerificationEmail = require('./email/verification.js')
+const { testEmail } = require('./regex')
 
 exports.verification = function verification(req, res, next) {
     if (req.user.roles.account.isVerified === 'yes') {
@@ -70,7 +71,6 @@ exports.verification = function verification(req, res, next) {
     workflow.emit('generateTokenOrRender');
 };
 
-
 exports.resendVerification = function resendVerification(req, res, next) {
     if (req.user.roles.account.isVerified === 'yes') {
         return res.redirect(req.user.defaultReturnUrl());
@@ -79,11 +79,11 @@ exports.resendVerification = function resendVerification(req, res, next) {
     let workflow = workflowMiddleware(req, res)
 
     workflow.on('validate', function() {
-        if (!req.body.email) {
-            workflow.outcome.errfor.email = 'required';
-        }
-        else if (!/^[a-zA-Z0-9\-\_\.\+]+@[a-zA-Z0-9\-\_\.]+\.[a-zA-Z0-9\-\_]+$/.test(req.body.email)) {
-            workflow.outcome.errfor.email = 'invalid email format';
+        let success, failReason;
+
+        [ success, failReason ] = testEmail(req.body.email);
+        if (!success) {
+            workflow.outcome.errfor.email = failReason;
         }
 
         if (workflow.hasErrors()) {
@@ -167,19 +167,20 @@ exports.resendVerification = function resendVerification(req, res, next) {
 
 // TODO send the welcome email after verification if this is set in the options
 exports.verify = function verify(req, res, next) {
-    req.app.db.models.User.validatePassword(req.params.token, req.user.roles.account.verificationToken, function(err, isValid) {
-        if (!isValid) {
-            return res.redirect(req.user.defaultReturnUrl());
-        }
-
-        var fieldsToSet = { isVerified: 'yes', verificationToken: '' };
-        var options = { new: true };
-        req.app.db.models.Account.findByIdAndUpdate(req.user.roles.account._id, fieldsToSet, options, function(err, account) {
-            if (err) {
-                return next(err);
+    req.app.db.models.User.validatePassword(req.params.token, req.user.roles.account.verificationToken)
+        .then((isValid) => {
+            if (!isValid) {
+                return res.redirect(req.user.defaultReturnUrl());
             }
 
-            return res.redirect(req.user.defaultReturnUrl());
-        });
-    });
+            var fieldsToSet = { isVerified: 'yes', verificationToken: '' };
+            var options = { new: true };
+            req.app.db.models.Account.findByIdAndUpdate(req.user.roles.account._id, fieldsToSet, options, function(err, account) {
+                if (err) {
+                    return next(err);
+                }
+
+                return res.redirect(req.user.defaultReturnUrl());
+            });
+        })
 };

@@ -3,6 +3,7 @@
 const startWorkflow = require('../auth/util/workflow')
 const sendmail = require('../auth/util/sendmail')
 const slugify = require('../auth/util/slugify')
+const { testUsername, testEmail, testPassword } = require('../auth/regex')
 
 exports.find = function(req, res, next){
     req.query.username = req.query.username ? req.query.username : '';
@@ -59,13 +60,11 @@ exports.create = function(req, res, next){
     var workflow = startWorkflow(req, res);
 
     workflow.on('validate', function() {
-        if (!req.body.username) {
-            workflow.outcome.errors.push('Please enter a username.');
-            return workflow.emit('response');
-        }
+        let success, failReason;
 
-        if (!/^[a-zA-Z0-9\-\_]+$/.test(req.body.username)) {
-            workflow.outcome.errors.push('only use letters, numbers, -, _');
+        [ success, failReason ] = testUsername(req.body.username);
+        if (!success) {
+            errfor.username = failReason;
             return workflow.emit('response');
         }
 
@@ -115,18 +114,22 @@ exports.update = function(req, res, next){
             req.body.isActive = 'no';
         }
 
-        if (!req.body.username) {
-            workflow.outcome.errfor.username = 'required';
-        }
-        else if (!/^[a-zA-Z0-9\-\_]+$/.test(req.body.username)) {
-            workflow.outcome.errfor.username = 'only use letters, numbers, \'-\', \'_\'';
+
+        let success, failReason;
+
+        [ success, failReason ] = testUsername(req.body.username);
+        if (!success) {
+            workflow.outcome.errfor.username = failReason;
         }
 
-        if (!req.body.email) {
-            workflow.outcome.errfor.email = 'required';
+        [ success, failReason ] = testEmail(req.body.email);
+        if (!success) {
+            workflow.outcome.errfor.email = failReason;
         }
-        else if (!/^[a-zA-Z0-9\-\_\.\+]+@[a-zA-Z0-9\-\_\.]+\.[a-zA-Z0-9\-\_]+$/.test(req.body.email)) {
-            workflow.outcome.errfor.email = 'invalid email format';
+
+        [ success, failReason ] = testPassword(req.body.password);
+        if (!success) {
+            workflow.outcome.errfor.password = failReason;
         }
 
         if (workflow.hasErrors()) {

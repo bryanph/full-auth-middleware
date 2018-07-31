@@ -1,9 +1,7 @@
-
-
-
 const passport = require('passport')
 const createWorkflow = require('./util/new_workflow.js')
 const to = require('await-to-js').default;
+const { testUsername, testEmail, testPassword } = require('./regex')
 
 exports.getUser = function(req, res, next) {
     const id = req.session.passport.user;
@@ -25,24 +23,21 @@ exports.updateUser = async function(req, res) {
         // validate request.body
         const errfor = {};
 
-        if (req.body.username) {
-            if (!/^[a-zA-Z0-9]+([_ -]?[a-zA-Z0-9])*$/.test(req.body.username)) {
-                errfor.username = 'invalid username format';
-            }
+        let success, failReason;
+
+        [ success, failReason ] = testUsername(req.body.username);
+        if (!success) {
+            errfor.username = failReason;
         }
 
-        if (req.body.email) {
-            if (!/^[a-zA-Z0-9\-\_\.\+]+@[a-zA-Z0-9\-\_\.]+\.[a-zA-Z0-9\-\_]+$/.test(req.body.email)) {
-                errfor.email = 'invalid email format';
-            }
+        [ success, failReason ] = testEmail(req.body.email);
+        if (!success) {
+            errfor.email = failReason;
         }
 
-        if (!req.body.password) {
-            errfor.password = 'required';
-        }
-
-        if (Object.keys(errfor).length > 0) {
-            // return error
+        [ success, failReason ] = testPassword(req.body.password);
+        if (!success) {
+            errfor.password = failReason;
         }
 
         return {

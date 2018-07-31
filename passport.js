@@ -48,17 +48,15 @@ module.exports = function(app, mongoose, config) {
                     return done(null, false, { message: `This email has been registered using ${social}` });
                 }
 
-                app.db.models.User.validatePassword(password, user.password, function(err, isValid) {
-                    if (err) {
-                        return done(err);
-                    }
+                app.db.models.User.validatePassword(password, user.password)
+                    .then((isValid) => {
+                        if (!isValid) {
+                            return done(null, false, { message: 'Invalid password' });
+                        }
 
-                    if (!isValid) {
-                        return done(null, false, { message: 'Invalid password' });
-                    }
-
-                    return done(null, user);
-                });
+                        return done(null, user);
+                    })
+                    .catch(err => done(err));
             });
         }
     ));
