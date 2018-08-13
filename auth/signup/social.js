@@ -1,7 +1,5 @@
 const workflowMiddleware = require('../util/workflow')
-const sendmail = require('../util/sendmail')
 const path = require('path')
-const sendVerificationEmail = require('../email/verification.js')
 const submitWelcomeEmail = require('../email/welcome.js')
 const errors = require('../../util/errors')
 
@@ -48,21 +46,10 @@ const createAccount = async function(req, user) {
 
     return account
 }
-
 const sendWelcomeEmail = async function(req, res, email, username) {
-    return new Promise((resolve, reject) => {
-        submitWelcomeEmail(req, res, {
-            username,
-            email,
-            onSuccess: function() {
-                resolve()
-            },
-            onError: function(err) {
-                console.error('Error Sending Welcome Email: '+ err);
-                resolve()
-                // return next(err);
-            }
-        })
+    return submitWelcomeEmail(req, res, {
+        username,
+        email,
     })
 }
 

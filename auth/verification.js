@@ -4,74 +4,10 @@ const workflowMiddleware = require('./util/workflow.js')
 const sendVerificationEmail = require('./email/verification.js')
 const { testEmail } = require('./regex')
 
-exports.verification = function verification(req, res, next) {
-    if (req.user.roles.account.isVerified === 'yes') {
-        return res.redirect(req.user.defaultReturnUrl());
-    }
-
-    let workflow = workflowMiddleware(req, res)
-
-    workflow.on('renderPage', function() {
-        req.app.db.models.User.findById(req.user.id, 'email').exec(function(err, user) {
-            if (err) {
-                return next(err);
-            }
-
-            res.redirect('/auth/account/verification')
-        });
-    });
-
-    workflow.on('generateTokenOrRender', function() {
-        if (req.user.roles.account.verificationToken !== '') {
-            return workflow.emit('renderPage');
-        }
-
-        workflow.emit('generateToken');
-    });
-
-    workflow.on('generateToken', function() {
-        var crypto = require('crypto');
-        crypto.randomBytes(21, function(err, buf) {
-            if (err) {
-                return next(err);
-            }
-
-            var token = buf.toString('hex');
-            req.app.db.models.User.encryptPassword(token, function(err, hash) {
-                if (err) {
-                    return next(err);
-                }
-
-                workflow.emit('patchAccount', token, hash);
-            });
-        });
-    });
-
-    workflow.on('patchAccount', function(token, hash) {
-        var fieldsToSet = { verificationToken: hash };
-        var options = { new: true };
-        req.app.db.models.Account.findByIdAndUpdate(req.user.roles.account.id, fieldsToSet, options, function(err, account) {
-            if (err) {
-                return next(err);
-            }
-
-            sendVerificationEmail(req, res, {
-                email: req.user.email,
-                verificationToken: token,
-                onSuccess: function() {
-                    return workflow.emit('renderPage');
-                },
-                onError: function(err) {
-                    return next(err);
-                }
-            });
-        });
-    });
-
-    workflow.emit('generateTokenOrRender');
-};
-
 exports.resendVerification = function resendVerification(req, res, next) {
+    /*
+     * Start verification flow with a new email
+    */
     if (req.user.roles.account.isVerified === 'yes') {
         return res.redirect(req.user.defaultReturnUrl());
     }
@@ -129,12 +65,9 @@ exports.resendVerification = function resendVerification(req, res, next) {
             }
 
             var token = buf.toString('hex');
-            req.app.db.models.User.encryptPassword(token, function(err, hash) {
-                if (err) {
-                    return next(err);
-                }
-
-                workflow.emit('patchAccount', token, hash);
+            req.app.db.models.User.encryptPassword(token)
+                .then((hash) => {
+                    workflow.emit('patchAccount', token, hash);
             });
         });
     });
@@ -150,14 +83,13 @@ exports.resendVerification = function resendVerification(req, res, next) {
             sendVerificationEmail(req, res, {
                 email: workflow.user.email,
                 verificationToken: token,
-                onSuccess: function() {
-                    workflow.emit('response');
-                },
-                onError: function(err) {
-                    workflow.outcome.errors.push('Error Sending: '+ err);
-                    workflow.emit('response');
-                }
-            });
+            })
+                .then(() => {
+                    return workflow.emit('response');
+                })
+                .catch(() => {
+                    return next(err);
+                })
         });
     });
 
@@ -184,3 +116,24 @@ exports.verify = function verify(req, res, next) {
             });
         })
 };
+
+const crypto = require('crypto');
+
+exports.startVerificationFlow = async function startVerificationFlow(req, res) {
+    /*
+     * creates a token, stores it as user.verificationToken and sends a verification email
+    */
+    const buf = crypto.randomBytes(21);
+    const token = buf.toString('hex');
+    const hash = await req.app.db.models.User.encryptPassword(token)
+
+    var fieldsToSet = { verificationToken: hash };
+    var options = { new: true };
+    const account = await req.app.db.models.Account.findByIdAndUpdate(req.user.roles.account.id, fieldsToSet, options)
+
+    return sendVerificationEmail(req, res, {
+        email: req.user.email,
+        verificationToken: token,
+    });
+}
+

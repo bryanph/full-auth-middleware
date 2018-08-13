@@ -1,5 +1,4 @@
 const workflowMiddleware = require('./util/workflow.js')
-const sendmail = require('./util/sendmail.js')
 const sendForgotEmail = require('./email/forgot.js')
 
 module.exports = function(req, res, next){
@@ -22,13 +21,14 @@ module.exports = function(req, res, next){
             }
 
             var token = buf.toString('hex');
-            req.app.db.models.User.encryptPassword(token, function(err, hash) {
-                if (err) {
-                    return next(err);
-                }
+            req.app.db.models.User.encryptPassword(token)
+                .then((hash) => {
+                    if (err) {
+                        return next(err);
+                    }
 
-                workflow.emit('patchUser', token, hash);
-            });
+                    workflow.emit('patchUser', token, hash);
+                })
         });
     });
 
@@ -56,13 +56,13 @@ module.exports = function(req, res, next){
             username: user.username,
             email: user.email,
             token: token,
-            onSuccess: function() {
+        })
+            .then(() => {
                 return workflow.emit('response');
-            },
-            onError: function(err) {
+            })
+            .catch(() => {
                 return next(err);
-            }
-        });
+            })
     });
 
     workflow.emit('validate');

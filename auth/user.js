@@ -1,7 +1,8 @@
 const passport = require('passport')
 const createWorkflow = require('./util/new_workflow.js')
 const to = require('await-to-js').default;
-const { testUsername, testEmail, testPassword } = require('./regex')
+const { testUsername, testEmail, testPassword } = require('./regex');
+const { startVerificationFlow } = require('./verification');
 
 exports.getUser = function(req, res, next) {
     const id = req.session.passport.user;
@@ -95,8 +96,9 @@ exports.updateUser = async function(req, res) {
             .then(() => ({ errfor }))
     }
 
-    function updateUser(user, validated) {
+    async function updateUser(user, validated) {
         const id = req.session.passport.user;
+        let shouldReverify = false;
 
         if (user.username !== validated.username) {
             user.username = validated.username;
@@ -104,15 +106,16 @@ exports.updateUser = async function(req, res) {
         if (user.email !== validated.email) {
             user.email = validated.email;
 
-            console.log(user);
-            // TODO: send a new verification mail if verification is enabled - 2018-07-30
+            shouldReverify = true;
         }
 
-        return user.save()
-            .then((updatedUser) => {
-                // not
-                return { updatedUser };
-            })
+        const updatedUser = await user.save()
+
+        if (shouldReverify) {
+            startVerificationFlow(req, res);
+        }
+
+        return { updatedUser };
     }
 
     let workflow = createWorkflow(req, res)

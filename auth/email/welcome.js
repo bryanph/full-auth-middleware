@@ -2,10 +2,10 @@ const sendmail = require('../util/sendmail.js')
 
 module.exports = function sendWelcomeEmail(req, res, options) {
     if (!req.app.config.sendWelcomeEmail) {
-        return options.onSuccess();
+        return;
     }
 
-    sendmail(req, res, {
+    return sendmail(req, res, {
         from: req.app.config.smtp.from.name +' <'+ req.app.config.smtp.from.address +'>',
         to: options.email,
         subject: 'Your '+ req.app.config.projectName +' Account',
@@ -18,12 +18,6 @@ module.exports = function sendWelcomeEmail(req, res, options) {
             projectName: req.app.config.projectName,
             supportEmail: req.app.config.supportEmail
         },
-        success: function() {
-            options.onSuccess();
-        },
-        error: function(err) {
-            options.onError(err);
-        }
     });
 };
 

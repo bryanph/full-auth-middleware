@@ -1,8 +1,7 @@
 'use strict';
 
-const startWorkflow = require('../auth/util/workflow')
-const sendmail = require('../auth/util/sendmail')
-const slugify = require('../auth/util/slugify')
+const startWorkflow = require('../../auth/util/workflow')
+const slugify = require('../../auth/util/slugify')
 
 exports.find = function(req, res, next){
     // TODO: this one seems off - 2017-05-01

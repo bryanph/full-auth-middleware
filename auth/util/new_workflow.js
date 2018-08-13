@@ -10,7 +10,6 @@ function to(promise) {
         return [null, data];
     })
         .catch(err => {
-            console.log("just caught an error!", err)
             return [err, {}]
         });
 }

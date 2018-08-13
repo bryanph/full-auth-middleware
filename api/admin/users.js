@@ -1,9 +1,8 @@
 'use strict';
 
-const startWorkflow = require('../auth/util/workflow')
-const sendmail = require('../auth/util/sendmail')
-const slugify = require('../auth/util/slugify')
-const { testUsername, testEmail, testPassword } = require('../auth/regex')
+const startWorkflow = require('../../auth/util/workflow')
+const slugify = require('../../auth/util/slugify')
+const { testUsername, testEmail, testPassword } = require('../../auth/regex')
 
 exports.find = function(req, res, next){
     req.query.username = req.query.username ? req.query.username : '';
@@ -263,29 +262,26 @@ exports.password = function(req, res, next){
     });
 
     workflow.on('patchUser', function() {
-        req.app.db.models.User.encryptPassword(req.body.password, function(err, hash) {
-            if (err) {
-                return workflow.emit('exception', err);
-            }
-
-            var fieldsToSet = { password: hash };
-            var options = { new: true };
-            req.app.db.models.User.findByIdAndUpdate(req.params.id, fieldsToSet, options, function(err, user) {
-                if (err) {
-                    return workflow.emit('exception', err);
-                }
-
-                user.populate('roles.admin roles.account', 'name.full', function(err, user) {
+        req.app.db.models.User.encryptPassword(req.body.password)
+            .then((hash) => {
+                var fieldsToSet = { password: hash };
+                var options = { new: true };
+                req.app.db.models.User.findByIdAndUpdate(req.params.id, fieldsToSet, options, function(err, user) {
                     if (err) {
                         return workflow.emit('exception', err);
                     }
 
-                    workflow.outcome.user = user;
-                    workflow.outcome.password = '';
-                    workflow.emit('response');
+                    user.populate('roles.admin roles.account', 'name.full', function(err, user) {
+                        if (err) {
+                            return workflow.emit('exception', err);
+                        }
+
+                        workflow.outcome.user = user;
+                        workflow.outcome.password = '';
+                        workflow.emit('response');
+                    });
                 });
             });
-        });
     });
 
     workflow.emit('validate');

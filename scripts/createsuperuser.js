@@ -82,28 +82,25 @@ db.once('open', () => {
                         return done(null, results.checkExists)
                     }
 
-                    db.models.User.encryptPassword(results.rootPassword, (error, hash) => {
-                        if (error) {
-                            return done(error)
-                        }
+                    db.models.User.encryptPassword(results.rootPassword)
+                        .then(hash => {
 
+                            const user = new db.models.User({
+                                _id: mongoose.Types.ObjectId(),
+                                isActive: true,
+                                username: results.rootEmail.toLowerCase(),
+                                password: hash,
+                                email: results.rootEmail.toLowerCase(),
+                                timeCreated: new Date()
+                            });
+                            return user.save((error, doc) => {
+                                if (error) {
+                                    return done(error)
+                                }
 
-                        const user = new db.models.User({
-                            _id: mongoose.Types.ObjectId(),
-                            isActive: true,
-                            username: results.rootEmail.toLowerCase(),
-                            password: hash,
-                            email: results.rootEmail.toLowerCase(),
-                            timeCreated: new Date()
-                        });
-                        return user.save((error, doc) => {
-                            if (error) {
-                                return done(error)
-                            }
-
-                            done(error, doc[0])
+                                done(error, doc[0])
+                            })
                         })
-                    })
                 }],
                 adminMembership: ['admin', 'adminGroup', (uResults, done) => {
                     const id = uResults.admin._id.toString();

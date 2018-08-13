@@ -1,7 +1,6 @@
 
 
 const workflowMiddleware = require('../util/workflow.js')
-const sendmail = require('../util/sendmail.js')
 const sendVerificationEmail = require('../email/verification.js')
 const sendWelcomeEmail = require('../email/welcome.js')
 
@@ -87,31 +86,29 @@ exports.signup = function signup(req, res, next) {
     });
 
     workflow.on('createUser', function() {
-        req.app.db.models.User.encryptPassword(req.body.password, function(err, hash) {
-            if (err) {
-                return workflow.emit('exception', err);
-            }
+        req.app.db.models.User.encryptPassword(req.body.password)
+            .then((hash) => {
 
-            var fieldsToSet = {
-                isActive: 'yes',
-                username: req.body.username,
-                email: req.body.email.toLowerCase(),
-                password: hash,
-                search: [
-                    req.body.username,
-                    req.body.email
-                ]
-            };
+                var fieldsToSet = {
+                    isActive: 'yes',
+                    username: req.body.username,
+                    email: req.body.email.toLowerCase(),
+                    password: hash,
+                    search: [
+                        req.body.username,
+                        req.body.email
+                    ]
+                };
 
-            req.app.db.models.User.create(fieldsToSet, function(err, user) {
-                if (err) {
-                    return workflow.emit('exception', err);
-                }
+                req.app.db.models.User.create(fieldsToSet, function(err, user) {
+                    if (err) {
+                        return workflow.emit('exception', err);
+                    }
 
-                workflow.user = user;
-                workflow.emit('createAccount');
+                    workflow.user = user;
+                    workflow.emit('createAccount');
+                });
             });
-        });
     });
 
     workflow.on('createAccount', function() {
@@ -145,19 +142,17 @@ exports.signup = function signup(req, res, next) {
     });
 
     workflow.on('sendWelcomeEmail', function() {
-
         sendWelcomeEmail(req, res, {
             username: req.body.username,
             email: req.body.email,
-            onSuccess: function() {
-                return workflow.emit('logUserIn');
-            },
-            onError: function(err) {
-                console.log('Error Sending Welcome Email: '+ err);
-                workflow.emit('logUserIn');
-                // return next(err);
-            }
         })
+            .then(() => {
+                return workflow.emit('logUserIn');
+            })
+            .catch(() => {
+                console.error('Error Sending Welcome Email: '+ err);
+                workflow.emit('logUserIn');
+            })
     });
 
     workflow.on('logUserIn', function() {
@@ -202,13 +197,10 @@ exports.signup = function signup(req, res, next) {
                 }
 
                 var token = buf.toString('hex');
-                req.app.db.models.User.encryptPassword(token, function(err, hash) {
-                    if (err) {
-                        return next(err);
-                    }
-
-                    workflow.emit('patchAccount', token, hash);
-                });
+                req.app.db.models.User.encryptPassword(token)
+                    .then((hash) => {
+                        workflow.emit('patchAccount', token, hash);
+                    });
             });
         });
 
@@ -223,13 +215,13 @@ exports.signup = function signup(req, res, next) {
                 sendVerificationEmail(req, res, {
                     email: req.user.email,
                     verificationToken: token,
-                    onSuccess: function() {
+                })
+                    .then(() => {
                         return workflow.emit('response');
-                    },
-                    onError: function(err) {
+                    })
+                    .catch(() => {
                         return next(err);
-                    }
-                });
+                    })
             });
         });
 
