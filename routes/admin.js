@@ -13,68 +13,68 @@ module.exports = function(app, config) {
 
     //admin > users
     // TODO: users/my is missing - 2017-05-01
-    router.get('/users/', require('../api/users').find);
-    router.post('/users/', require('../api/users').create);
-    router.get('/users/:id/', require('../api/users').read);
-    router.put('/users/:id/', require('../api/users').update);
-    router.put('/users/:id/password/', require('../api/users').password);
-    router.delete('/users/:id/', require('../api/users').delete);
+    router.get('/users/', require('../api/admin/users').find);
+    router.post('/users/', require('../api/admin/users').create);
+    router.get('/users/:id/', require('../api/admin/users').read);
+    router.put('/users/:id/', require('../api/admin/users').update);
+    router.put('/users/:id/password/', require('../api/admin/users').password);
+    router.delete('/users/:id/', require('../api/admin/users').delete);
 
     // TODO: these are not used it seems - 2017-05-01
-    router.put('/users/:id/role-admin/', require('../api/users').linkAdmin);
-    router.delete('/users/:id/role-admin/', require('../api/users').unlinkAdmin);
-    router.put('/users/:id/role-account/', require('../api/users').linkAccount);
-    router.delete('/users/:id/role-account/', require('../api/users').unlinkAccount);
+    router.put('/users/:id/role-admin/', require('../api/admin/users').linkAdmin);
+    router.delete('/users/:id/role-admin/', require('../api/admin/users').unlinkAdmin);
+    router.put('/users/:id/role-account/', require('../api/admin/users').linkAccount);
+    router.delete('/users/:id/role-account/', require('../api/admin/users').unlinkAccount);
 
     //admin > admins
-    router.get('/admins/', require('../api/admins').find);
-    router.post('/admins/', require('../api/admins').create);
-    router.get('/admins/:id/', require('../api/admins').read);
-    router.put('/admins/:id/', require('../api/admins').update);
-    router.put('/admins/:id/permissions/', require('../api/admins').permissions);
-    router.put('/admins/:id/groups/', require('../api/admins').groups);
-    router.put('/admins/:id/user/', require('../api/admins').linkUser);
-    router.delete('/admins/:id/user/', require('../api/admins').unlinkUser);
-    router.delete('/admins/:id/', require('../api/admins').delete);
+    router.get('/admins/', require('../api/admin/admins').find);
+    router.post('/admins/', require('../api/admin/admins').create);
+    router.get('/admins/:id/', require('../api/admin/admins').read);
+    router.put('/admins/:id/', require('../api/admin/admins').update);
+    router.put('/admins/:id/permissions/', require('../api/admin/admins').permissions);
+    router.put('/admins/:id/groups/', require('../api/admin/admins').groups);
+    router.put('/admins/:id/user/', require('../api/admin/admins').linkUser);
+    router.delete('/admins/:id/user/', require('../api/admin/admins').unlinkUser);
+    router.delete('/admins/:id/', require('../api/admin/admins').delete);
 
     //admin > admin groups
-    router.get('/admin-groups/', require('../api/admin-groups').find);
-    router.post('/admin-groups/', require('../api/admin-groups').create);
-    router.get('/admin-groups/:id/', require('../api/admin-groups').read);
-    router.put('/admin-groups/:id/', require('../api/admin-groups').update);
-    router.put('/admin-groups/:id/permissions/', require('../api/admin-groups').permissions);
-    router.delete('/admin-groups/:id/', require('../api/admin-groups').delete);
+    router.get('/admin-groups/', require('../api/admin/admin-groups').find);
+    router.post('/admin-groups/', require('../api/admin/admin-groups').create);
+    router.get('/admin-groups/:id/', require('../api/admin/admin-groups').read);
+    router.put('/admin-groups/:id/', require('../api/admin/admin-groups').update);
+    router.put('/admin-groups/:id/permissions/', require('../api/admin/admin-groups').permissions);
+    router.delete('/admin-groups/:id/', require('../api/admin/admin-groups').delete);
 
     //admin > accounts
     // TODO: accounts/my missing - 2017-05-01
-    router.get('/accounts/', require('../api/accounts').find);
-    router.post('/accounts/', require('../api/accounts').create);
-    router.get('/accounts/:id/', require('../api/accounts').read);
-    router.put('/accounts/:id/', require('../api/accounts').update);
-    router.put('/accounts/:id/user/', require('../api/accounts').linkUser);
-    router.delete('/accounts/:id/user/', require('../api/accounts').unlinkUser);
-    router.post('/accounts/:id/notes/', require('../api/accounts').newNote);
-    router.post('/accounts/:id/status/', require('../api/accounts').newStatus);
-    router.delete('/accounts/:id/', require('../api/accounts').delete);
+    router.get('/accounts/', require('../api/admin/accounts').find);
+    router.post('/accounts/', require('../api/admin/accounts').create);
+    router.get('/accounts/:id/', require('../api/admin/accounts').read);
+    router.put('/accounts/:id/', require('../api/admin/accounts').update);
+    router.put('/accounts/:id/user/', require('../api/admin/accounts').linkUser);
+    router.delete('/accounts/:id/user/', require('../api/admin/accounts').unlinkUser);
+    router.post('/accounts/:id/notes/', require('../api/admin/accounts').newNote);
+    router.post('/accounts/:id/status/', require('../api/admin/accounts').newStatus);
+    router.delete('/accounts/:id/', require('../api/admin/accounts').delete);
 
     //admin > statuses
-    router.get('/statuses/', require('../api/statuses').find);
-    router.post('/statuses/', require('../api/statuses').create);
-    router.get('/statuses/:id/', require('../api/statuses').read);
-    router.put('/statuses/:id/', require('../api/statuses').update);
-    router.delete('/statuses/:id/', require('../api/statuses').delete);
+    router.get('/statuses/', require('../api/admin/statuses').find);
+    router.post('/statuses/', require('../api/admin/statuses').create);
+    router.get('/statuses/:id/', require('../api/admin/statuses').read);
+    router.put('/statuses/:id/', require('../api/admin/statuses').update);
+    router.delete('/statuses/:id/', require('../api/admin/statuses').delete);
 
     //admin > categories
     // TODO: seem to have been removed - 2017-05-01
-    // router.get('/categories/', require('../api/categories').find);
-    // router.post('/categories/', require('../api/categories').create);
-    // router.get('/categories/:id/', require('../api/categories').read);
-    // router.put('/categories/:id/', require('../api/categories').update);
-    // router.delete('/categories/:id/', require('../api/categories').delete);
+    // router.get('/categories/', require('../api/admin/categories').find);
+    // router.post('/categories/', require('../api/admin/categories').create);
+    // router.get('/categories/:id/', require('../api/admin/categories').read);
+    // router.put('/categories/:id/', require('../api/admin/categories').update);
+    // router.delete('/categories/:id/', require('../api/admin/categories').delete);
 
     //admin > search
     // TODO: seem to have been removed - 2017-05-01
-    // router.get('/search/', require('../api/search').find);
+    // router.get('/search/', require('../api/admin/search').find);
 
     const bundleFileName = config.bundleFileName ? config.bundleFileName : 'admin.bundle.js'
 

@@ -1,6 +1,6 @@
 /* global window */
 'use strict';
-const ApiActions = require('../../actions/api');
+const ApiActions = require('../../actions/api/admin');
 const Constants = require('./constants');
 const ForgotStore = require('./forgot/store');
 const LoginStore = require('./home/store');
@@ -13,7 +13,7 @@ class Actions {
     static forgot(data) {
 
         ApiActions.post(
-            '/api/login/forgot',
+            '/api/admin/login/forgot',
             data,
             ForgotStore,
             Constants.FORGOT,
@@ -24,7 +24,7 @@ class Actions {
     static login(data) {
 
         ApiActions.post(
-            '/api/login',
+            '/api/admin/login',
             data,
             LoginStore,
             Constants.LOGIN,
@@ -51,7 +51,7 @@ class Actions {
     static logout() {
 
         ApiActions.delete(
-            '/api/logout',
+            '/api/admin/logout',
             undefined,
             LogoutStore,
             Constants.LOGOUT,
@@ -62,7 +62,7 @@ class Actions {
     static reset(data) {
 
         ApiActions.post(
-            '/api/login/reset',
+            '/api/admin/login/reset',
             data,
             ResetStore,
             Constants.RESET,

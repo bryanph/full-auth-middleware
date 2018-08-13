@@ -1,5 +1,5 @@
 'use strict';
-const ApiActions = require('../../../actions/api');
+const ApiActions = require('../../../actions/api/admin');
 const Constants = require('./constants');
 const Store = require('./store');
 
@@ -8,7 +8,7 @@ class Actions {
     static getDetails() {
 
         ApiActions.get(
-            '/api/accounts/my',
+            '/api/admin/accounts/my',
             undefined,
             Store,
             Constants.GET_DETAILS,
@@ -19,7 +19,7 @@ class Actions {
     static saveDetails(data) {
 
         ApiActions.put(
-            '/api/accounts/my',
+            '/api/admin/accounts/my',
             data,
             Store,
             Constants.SAVE_DETAILS,
@@ -37,7 +37,7 @@ class Actions {
     static getUser() {
 
         ApiActions.get(
-            '/api/users/my',
+            '/api/admin/users/my',
             undefined,
             Store,
             Constants.GET_USER,
@@ -48,7 +48,7 @@ class Actions {
     static saveUser(data) {
 
         ApiActions.put(
-            '/api/users/my',
+            '/api/admin/users/my',
             data,
             Store,
             Constants.SAVE_USER,
@@ -78,7 +78,7 @@ class Actions {
         delete data.passwordConfirm;
 
         ApiActions.put(
-            '/api/users/my/password',
+            '/api/admin/users/my/password',
             data,
             Store,
             Constants.SAVE_PASSWORD,

@@ -1,6 +1,6 @@
 /* global window */
 'use strict';
-const ApiActions = require('../../actions/api');
+const ApiActions = require('../../actions/api/admin');
 const Constants = require('./constants');
 const Store = require('./store');
 
@@ -9,7 +9,7 @@ class Actions {
     static sendRequest(data) {
 
         ApiActions.post(
-            '/api/signup',
+            '/api/admin/signup',
             data,
             Store,
             Constants.REGISTER,
