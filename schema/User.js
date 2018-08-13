@@ -23,9 +23,12 @@ module.exports = function(app, mongoose, config) {
         search: [String],
         avatar: String,
         displayName: String,
-
-        ...((config.models && config.models.user) || {})
+    }, {
+        toObject: { virtuals: true },
+        toJSON: { virtuals: true }
     });
+
+    config.models && config.models.user(userSchema)
 
     userSchema.statics.getById = function(id) {
         return this
