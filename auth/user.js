@@ -1,6 +1,5 @@
 const passport = require('passport')
 const createWorkflow = require('./util/new_workflow.js')
-const to = require('await-to-js').default;
 const { testUsername, testEmail, testPassword } = require('./regex');
 const { startVerificationFlow } = require('./verification');
 
@@ -26,10 +25,10 @@ exports.updateUser = async function(req, res) {
 
         let success, failReason;
 
-        [ success, failReason ] = testUsername(req.body.username);
-        if (!success) {
-            errfor.username = failReason;
-        }
+        // [ success, failReason ] = testUsername(req.body.username);
+        // if (!success) {
+        //     errfor.username = failReason;
+        // }
 
         [ success, failReason ] = testEmail(req.body.email);
         if (!success) {

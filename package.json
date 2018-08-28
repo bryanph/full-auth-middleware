@@ -59,7 +59,9 @@
     "webpack-bundle-analyzer": "2.4.0",
     "xhr": "2.4.0"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "stripe-mock-webhooks": "1.1.0"
+  },
   "scripts": {
     "build": "webpack --config webpack.config.prod.js"
   },

@@ -31,12 +31,14 @@ exports.signup = function signup(req, res, next) {
 
     workflow.on('validate', function() {
 
+        console.log(req.body)
+
         let success, failReason;
 
-        [ success, failReason ] = testUsername(req.body.username);
-        if (!success) {
-            workflow.outcome.errfor.username = failReason;
-        }
+        // [ success, failReason ] = testUsername(req.body.username);
+        // if (!success) {
+        //     workflow.outcome.errfor.username = failReason;
+        // }
 
         [ success, failReason ] = testEmail(req.body.email);
         if (!success) {
