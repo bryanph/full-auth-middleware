@@ -2,7 +2,7 @@ const sendmail = require('../util/sendmail.js')
 
 module.exports = function sendWelcomeEmail(req, res, options) {
     if (!req.app.config.sendWelcomeEmail) {
-        return;
+        return Promise.resolve()
     }
 
     return sendmail(req, res, {

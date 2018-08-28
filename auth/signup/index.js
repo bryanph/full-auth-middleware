@@ -54,7 +54,7 @@ exports.signup = function signup(req, res, next) {
             return workflow.emit('response');
         }
 
-        workflow.emit('duplicateUsernameCheck');
+        workflow.emit('duplicateEmailCheck');
     });
 
     workflow.on('duplicateUsernameCheck', function() {
