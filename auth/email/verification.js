@@ -4,7 +4,7 @@ module.exports = function sendVerificationEmail(req, res, options) {
     return sendmail(req, res, {
         from: req.app.config.smtp.from.name +' <'+ req.app.config.smtp.from.address +'>',
         to: options.email,
-        subject: 'Verify Your '+ req.app.config.projectName +' Account',
+        subject: 'Verify your '+ req.app.config.projectName +' account',
         textPath: 'email/verification-text.hbs',
         // htmlPath: 'email/verification-html.hbs',
         locals: {

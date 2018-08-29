@@ -8,7 +8,7 @@ module.exports = function sendWelcomeEmail(req, res, options) {
     return sendmail(req, res, {
         from: req.app.config.smtp.from.name +' <'+ req.app.config.smtp.from.address +'>',
         to: options.email,
-        subject: 'Your '+ req.app.config.projectName +' Account',
+        subject: 'Your '+ req.app.config.projectName +' account',
         textPath: 'email/signup-text.hbs',
         // htmlPath: 'email/signup-html.hbs',
         locals: {

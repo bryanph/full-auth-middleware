@@ -21,33 +21,35 @@ exports = module.exports = function(req, res, options) {
     return new Promise((resolve, reject) => {
 
         if (!options.textPath && !options.htmlPath) {
-            console.error('textPath and htmlPath must be specified');
+            console.error('textPath or htmlPath must be specified');
             return;
         }
 
-        const textTemplate = req.app.utils.loadTemplate(options.textPath)
-        const htmlTemplate = req.app.utils.loadTemplate(options.htmlPath)
+        const renderers = [];
 
-        var renderText = function(callback) {
-            const text = textTemplate(options.locals)
-            options.text = text
-
-            return callback(null, 'done')
-        };
-
-        var renderHtml = function(callback) {
-            const html = htmlTemplate(options.locals)
-            options.html = html
-
-            return callback(null, 'done')
-        };
-
-        var renderers = [];
         if (options.textPath) {
+            const textTemplate = req.app.utils.loadTemplate(options.textPath)
+            
+            const renderText = function(callback) {
+                const text = textTemplate(options.locals)
+                options.text = text
+
+                return callback(null, 'done')
+            }
+
             renderers.push(renderText);
         }
 
         if (options.htmlPath) {
+            const htmlTemplate = req.app.utils.loadTemplate(options.htmlPath)
+
+            const renderHtml = function(callback) {
+                const html = htmlTemplate(options.locals)
+                options.html = html
+
+                return callback(null, 'done')
+            }
+
             renderers.push(renderHtml);
         }
 

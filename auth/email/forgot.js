@@ -10,7 +10,8 @@ module.exports = function sendForgotEmail(req, res, options) {
         locals: {
             username: options.username,
             resetLink: req.protocol +'://'+ req.headers.host +'/auth/login/reset/'+ options.email +'/'+ options.token +'/',
-            projectName: req.app.config.projectName
+            projectName: req.app.config.projectName,
+            supportEmail: req.app.config.supportEmail,
         },
     });
 };

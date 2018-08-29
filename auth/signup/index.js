@@ -151,7 +151,7 @@ exports.signup = function signup(req, res, next) {
             .then(() => {
                 return workflow.emit('logUserIn');
             })
-            .catch(() => {
+            .catch((err) => {
                 console.error('Error Sending Welcome Email: '+ err);
                 workflow.emit('logUserIn');
             })
