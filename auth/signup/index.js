@@ -148,13 +148,11 @@ exports.signup = function signup(req, res, next) {
             username: req.body.username,
             email: req.body.email,
         })
-            .then(() => {
-                return workflow.emit('logUserIn');
-            })
             .catch((err) => {
                 console.error('Error Sending Welcome Email: '+ err);
-                workflow.emit('logUserIn');
             })
+
+        workflow.emit('logUserIn');
     });
 
     workflow.on('logUserIn', function() {
@@ -218,12 +216,10 @@ exports.signup = function signup(req, res, next) {
                     email: req.user.email,
                     verificationToken: token,
                 })
-                    .then(() => {
-                        return workflow.emit('response');
+                    .catch((error) => {
+                        console.error(error)
                     })
-                    .catch(() => {
-                        return next(err);
-                    })
+                return workflow.emit('response');
             });
         });
 

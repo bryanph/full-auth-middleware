@@ -87,8 +87,9 @@ exports.resendVerification = function resendVerification(req, res, next) {
                 .then(() => {
                     return workflow.emit('response');
                 })
-                .catch(() => {
-                    return next(err);
+                .catch((error) => {
+                    console.error("Failed sending verification error: ", error)
+                    return next(error);
                 })
         });
     });
