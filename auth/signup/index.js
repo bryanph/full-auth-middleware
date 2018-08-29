@@ -115,7 +115,7 @@ exports.signup = function signup(req, res, next) {
 
     workflow.on('createAccount', function() {
         var fieldsToSet = {
-            isVerified: 'no',
+            isVerified: false,
             'name.full': workflow.user.username,
             user: {
                 id: workflow.user._id,

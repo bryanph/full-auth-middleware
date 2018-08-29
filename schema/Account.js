@@ -9,7 +9,7 @@ exports = module.exports = function(app, mongoose, config) {
         },
 
         // TODO: move to User model - 2017-06-02
-        isVerified: { type: String, default: '' },
+        isVerified: { type: Boolean, default: false },
         verificationToken: { type: String, default: '' },
 
         // TODO: not using this - 2017-06-02

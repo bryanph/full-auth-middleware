@@ -6,7 +6,7 @@ module.exports = function sendVerificationEmail(req, res, options) {
         to: options.email,
         subject: 'Verify Your '+ req.app.config.projectName +' Account',
         textPath: 'email/verification-text.hbs',
-        htmlPath: 'email/verification-html.hbs',
+        // htmlPath: 'email/verification-html.hbs',
         locals: {
             verifyURL: req.protocol +'://'+ req.headers.host +'/auth/account/verification/' + options.verificationToken + '/',
             projectName: req.app.config.projectName

@@ -8,7 +8,7 @@ exports.resendVerification = function resendVerification(req, res, next) {
     /*
      * Start verification flow with a new email
     */
-    if (req.user.roles.account.isVerified === 'yes') {
+    if (req.user.roles.account.isVerified) {
         return res.redirect(req.user.defaultReturnUrl());
     }
 
@@ -105,7 +105,7 @@ exports.verify = function verify(req, res, next) {
                 return res.redirect(req.user.defaultReturnUrl());
             }
 
-            var fieldsToSet = { isVerified: 'yes', verificationToken: '' };
+            var fieldsToSet = { isVerified: true, verificationToken: '' };
             var options = { new: true };
             req.app.db.models.Account.findByIdAndUpdate(req.user.roles.account._id, fieldsToSet, options, function(err, account) {
                 if (err) {
@@ -127,7 +127,7 @@ exports.startVerificationFlow = async function startVerificationFlow(req, res) {
     const token = buf.toString('hex');
     const hash = await req.app.db.models.User.encryptPassword(token)
 
-    var fieldsToSet = { verificationToken: hash };
+    var fieldsToSet = { isVerified: "no", verificationToken: hash };
     var options = { new: true };
     const account = await req.app.db.models.Account.findByIdAndUpdate(req.user.roles.account.id, fieldsToSet, options)
 

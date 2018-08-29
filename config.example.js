@@ -36,7 +36,7 @@ const auth = {
     "systemEmail": "noreply@geist.fyi",
     "supportEmail": "support@geist.fyi",
     "cryptoKey": "TODO change",
-    "sendWelcomeMail": false,
+    "sendWelcomeEmail": false,
     "requireAccountVerification": true,
     "smtp": {
         from: {

@@ -3,7 +3,7 @@
 function isVerified(req, res, next) {
     if (req.user && req.user.canPlayRoleOf('account')) {
         if (req.app.config.requireAccountVerification) {
-            if (req.user.roles.account.isVerified !== 'yes' && !/^\/account\/verification\//.test(req.url)) {
+            if (!req.user.roles.account.isVerified && !/^\/account\/verification\//.test(req.url)) {
                 return false
             }
         }
@@ -41,7 +41,7 @@ function ensureVerified(req, res, next) {
 function ensureAccount(req, res, next) {
     if (req.user.canPlayRoleOf('account')) {
         if (req.app.config.requireAccountVerification) {
-            if (req.user.roles.account.isVerified !== 'yes' && !/^\/account\/verification\//.test(req.url)) {
+            if (!req.user.roles.account.isVerified && !/^\/account\/verification\//.test(req.url)) {
                 return res.redirect('/auth/account/verification');
             }
         }

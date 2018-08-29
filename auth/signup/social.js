@@ -35,7 +35,7 @@ const createUser = async function(req, email, username, displayName, avatar, pro
 
 const createAccount = async function(req, user) {
     const fieldsToSet = {
-        isVerified: 'yes',
+        isVerified: true,
         user: {
             id: user._id,
             name: user.username

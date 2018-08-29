@@ -10,7 +10,7 @@ module.exports = function sendWelcomeEmail(req, res, options) {
         to: options.email,
         subject: 'Your '+ req.app.config.projectName +' Account',
         textPath: 'email/signup-text.hbs',
-        htmlPath: 'email/signup-html.hbs',
+        // htmlPath: 'email/signup-html.hbs',
         locals: {
             username: options.username,
             email: options.email,
