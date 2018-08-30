@@ -36,6 +36,7 @@ module.exports = function(app, mongoose, config) {
             .findOne({ _id: id })
             .populate('roles.admin')
             .populate('roles.account')
+            .populate('files') // TODO: should be done in user code - 2018-08-30
             .then(function(user) {
                 if (user && user.roles && user.roles.admin) {
 

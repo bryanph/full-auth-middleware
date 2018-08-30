@@ -142,19 +142,8 @@ module.exports = function(app, mongoose, config) {
     });
 
     passport.deserializeUser(function(id, done) {
-        app.db.models.User.findOne({ _id: id }, { password: 0 })
-            .populate('roles.admin')
-            .populate('roles.account')
-            .exec(function(err, user) {
-                if (user && user.roles && user.roles.admin) {
-                    user.roles.admin.populate("groups", function(err, admin) {
-                        done(err, user);
-                    });
-                }
-                else {
-                    done(err, user);
-                }
-            });
+        app.db.models.User.getById(id)
+            .then(user => done(null, user))
+            .catch(error => done(error, null))
     });
-
 }
