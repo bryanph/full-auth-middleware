@@ -76,7 +76,7 @@ module.exports = function(app, config) {
     // TODO: seem to have been removed - 2017-05-01
     // router.get('/search/', require('../api/admin/search').find);
 
-    const bundleFileName = config.bundleFileName ? config.bundleFileName : 'admin.bundle.js'
+    const bundleFileName = config.adminBundleFileName ? config.adminBundleFileName : 'admin.bundle.js'
 
     const adminTemplate = config.adminTemplate ? 
         app.utils.loadTemplate(config.adminTemplate, false) 

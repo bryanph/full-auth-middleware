@@ -63,7 +63,7 @@ module.exports = function(app, config) {
     // Routes for the SPA
     // Just send responses instead of redirecting? and let client decide where to route to?
 
-    const bundleFileName = config.bundleFileName ? config.bundleFileName : 'auth.bundle.js'
+    const bundleFileName = config.authBundleFileName ? config.authBundleFileName : 'auth.bundle.js'
 
     const authTemplate = config.authTemplate ? 
         app.utils.loadTemplate(config.authTemplate, false) 
