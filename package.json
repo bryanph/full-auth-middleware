@@ -1,7 +1,7 @@
 {
   "name": "full-auth-middleware",
   "author": "Bryan Haakman",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "Full authentication middleware for express",
   "main": "index.js",
   "repository": {

@@ -101,6 +101,7 @@ exports.signupTwitter = function signupTwitter(req, res, next) {
             return next({
                 type: errors.SOCIAL_AUTH_FAILED, // validation
                 provider: 'twitter',
+                error: err,
             })
         }
 
@@ -131,6 +132,7 @@ exports.signupGoogle = function signupGoogle(req, res, next) {
             return next({
                 type: errors.SOCIAL_AUTH_FAILED, // validation
                 provider: 'google',
+                error: err,
             })
         }
 
@@ -160,6 +162,7 @@ exports.signupGithub = function signupGithub(req, res, next) {
             return next({
                 type: errors.SOCIAL_AUTH_FAILED, // validation
                 provider: 'github',
+                error: err,
             })
         }
 
@@ -191,6 +194,7 @@ exports.signupFacebook = function signupFacebook(req, res, next) {
             return next({
                 type: errors.SOCIAL_AUTH_FAILED, // validation
                 provider: 'facebook',
+                error: err,
             })
         }
 
