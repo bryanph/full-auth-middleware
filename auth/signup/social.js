@@ -67,6 +67,16 @@ const logUserIn = async function(req, res, user) {
 }
 
 const completeSocialSignup = async function(req, res, next, email, username, displayName, avatar, provider, providerId) {
+
+    if (!email || !username) {
+        return next({
+            type: errors.VALIDATION_ERROR, // validation
+            errFor: {
+                email: `No ${provider} email was fetched`
+            }
+        })
+    }
+
     const noDuplicate = await duplicateCheck(req, email, username)
 
     if (!noDuplicate) {
